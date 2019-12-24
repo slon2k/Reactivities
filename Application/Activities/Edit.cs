@@ -51,7 +51,6 @@ namespace Application.Activities
 
                 throw new Exception("Problem saving changes");
             }
-            }
         }
     }
 }
