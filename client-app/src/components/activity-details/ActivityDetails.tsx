@@ -4,12 +4,14 @@ import { Card, Image, ButtonGroup, Button } from "semantic-ui-react";
 
 interface IProps {
   activity: IActivity;
+  setEditMode: (mode: boolean) => void;
+  clearSelectedActivity: () => void;
 }
 
-export const ActivityDetails: React.FC<IProps> = ({ activity }) => {
+export const ActivityDetails: React.FC<IProps> = ({ activity, setEditMode, clearSelectedActivity }) => {
   return (
     <Card fluid>
-      <Image src="/assets/placeholder.png" />
+      <Image src={`/assets/categoryImages/${activity.category}.jpg`} wrapped ui={false}/>
       <Card.Content>
         <Card.Header>{activity.title}</Card.Header>
         <Card.Meta>
@@ -19,8 +21,8 @@ export const ActivityDetails: React.FC<IProps> = ({ activity }) => {
       </Card.Content>
       <Card.Content extra>
         <ButtonGroup widths={2}>
-          <Button basic color="blue" content="Edit" />
-          <Button basic color="grey" content="Cancel" />
+          <Button basic color="blue" content="Edit" onClick = {() => setEditMode(true)}/>
+          <Button basic color="grey" content="Cancel" onClick = {() => clearSelectedActivity() }/>
         </ButtonGroup>
       </Card.Content>
     </Card>

@@ -1,7 +1,12 @@
 import React from "react";
 import { Menu, Container, Button } from "semantic-ui-react";
 
-export const NavBar = () => {
+interface IProps {
+  setEditMode: (mode: boolean) => void;
+  clearSelectedActivity: () => void;
+}
+
+export const NavBar: React.FC<IProps> = ({ setEditMode, clearSelectedActivity }) => {
   return (
     <Menu inverted fixed="top">
       <Container>
@@ -15,7 +20,14 @@ export const NavBar = () => {
         </Menu.Item>
         <Menu.Item name="Messages" />
         <Menu.Item>
-          <Button positive content="Create Activity" />
+          <Button
+            onClick={() => {
+              clearSelectedActivity();
+              setEditMode(true);
+            }}
+            positive
+            content="Create Activity"
+          />
         </Menu.Item>
       </Container>
     </Menu>

@@ -7,6 +7,7 @@ import { ActivityDashboard } from "../activity-dashboard/ActivityDashboard";
 
 const App = () => {
   const [activities, setActivities] = useState<IActivity[]>([]);
+  const [editMode, setEditMode] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(
     null
   );
@@ -18,6 +19,10 @@ const App = () => {
     }
   };
 
+  const clearSelectedActivity = () => {
+    setSelectedActivity(null);
+  };
+
   useEffect(() => {
     axios
       .get<IActivity[]>("http://localhost:5000/api/activities")
@@ -26,12 +31,15 @@ const App = () => {
 
   return (
     <Fragment>
-      <NavBar />
+      <NavBar setEditMode={setEditMode} clearSelectedActivity={clearSelectedActivity}/>
       <Container style={{ paddingTop: "7em" }}>
         <ActivityDashboard
           activities={activities}
           selectedActivity={selectedActivity}
           selectActivity={selectActivity}
+          editMode={editMode}
+          setEditMode={setEditMode}
+          clearSelectedActivity={clearSelectedActivity}
         />
       </Container>
     </Fragment>
