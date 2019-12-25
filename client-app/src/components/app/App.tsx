@@ -10,6 +10,7 @@ const App = () => {
   const [activities, setActivities] = useState<IActivity[]>([]);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(
     null
   );
@@ -27,14 +28,17 @@ const App = () => {
   };
 
   const createActivity = (activity: IActivity) => {
+    setSubmitting(true);
     api.Activities.create(activity).then(() => {
       setActivities([...activities, activity]);
       setSelectedActivity(activity);
       setEditMode(false);
+      setSubmitting(false);
     });
   };
 
   const updateActivity = (activity: IActivity) => {
+    setSubmitting(true);
     api.Activities.update(activity).then(() => {
       setActivities([
         ...activities.filter(item => item.id !== activity.id),
@@ -42,6 +46,7 @@ const App = () => {
       ]);
       setSelectedActivity(activity);
       setEditMode(false);
+      setSubmitting(false);
     });
   };
 
@@ -86,6 +91,7 @@ const App = () => {
           createActivity={createActivity}
           updateActivity={updateActivity}
           deleteActivity={deleteActivity}
+          submitting={submitting}
         />
       </Container>
     </Fragment>

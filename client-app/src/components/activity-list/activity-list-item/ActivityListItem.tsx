@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Item, Button, Label } from "semantic-ui-react";
 import { IActivity } from "../../../models/activity";
 
@@ -13,6 +13,8 @@ export const ActivityListItem: React.FC<IProps> = ({
   selectActivity,
   deleteActivity
 }) => {
+
+  const [deleting, setDeleting] = useState(false);
   return (
     <Item>
       <Item.Content>
@@ -32,7 +34,11 @@ export const ActivityListItem: React.FC<IProps> = ({
             content="View"
           />
           <Button
-            onClick={() => deleteActivity(activity.id)}
+            onClick={() => {
+              setDeleting(true);
+              deleteActivity(activity.id);              
+            }}
+            loading={deleting}
             floated="right"
             color="red"
             content="Delete"
