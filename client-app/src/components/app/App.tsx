@@ -4,10 +4,12 @@ import { IActivity } from "../../models/activity";
 import { NavBar } from "../navbar/NavBar";
 import { ActivityDashboard } from "../activity-dashboard/ActivityDashboard";
 import * as api from "../../services/api";
+import { Loading } from "../loading/Loading";
 
 const App = () => {
   const [activities, setActivities] = useState<IActivity[]>([]);
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(
     null
   );
@@ -60,8 +62,12 @@ const App = () => {
         activities.push(item);
       });
       setActivities(activities);
-    });
+    }).then(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return <Loading content="Loading activities ..."/>
+  }
 
   return (
     <Fragment>
