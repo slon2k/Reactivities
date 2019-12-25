@@ -13,6 +13,7 @@ const App = () => {
   );
 
   const selectActivity = (id: string) => {
+    setEditMode(false);
     const index = activities.findIndex(item => item.id === id);
     if (index > -1) {
       setSelectedActivity(activities[index]);
@@ -23,10 +24,39 @@ const App = () => {
     setSelectedActivity(null);
   };
 
+  const createActivity = (activity: IActivity) => {
+    setActivities([...activities, activity]);
+    setSelectedActivity(activity);
+    setEditMode(false);
+  }
+
+  const updateActivity = (activity: IActivity) => {
+    setActivities([...activities.filter(item => item.id !== activity.id), activity]);
+    setSelectedActivity(activity);
+    setEditMode(false);
+  }
+
+  const deleteActivity = (id: string) => {
+    const index = activities.findIndex(item => item.id === id);
+    if (index > -1) {
+      setActivities([...activities.filter(item => item.id !== id)]);
+    }
+    if (selectedActivity && selectedActivity.id === id) {
+      clearSelectedActivity();
+    }  
+  }
+
   useEffect(() => {
     axios
       .get<IActivity[]>("http://localhost:5000/api/activities")
-      .then(response => setActivities(response.data));
+      .then(response => {
+        const activities: IActivity[] = [];
+        response.data.forEach(item => {
+          item.date = item.date.split(".")[0];
+          activities.push(item);
+        });
+        setActivities(activities);
+      });
   }, []);
 
   return (
@@ -40,6 +70,9 @@ const App = () => {
           editMode={editMode}
           setEditMode={setEditMode}
           clearSelectedActivity={clearSelectedActivity}
+          createActivity={createActivity}
+          updateActivity={updateActivity}
+          deleteActivity={deleteActivity}
         />
       </Container>
     </Fragment>
