@@ -1,8 +1,11 @@
 import React, { useState, useEffect, Fragment }   from 'react';
 import axios from 'axios';
 import { List, ListItem, Container } from 'semantic-ui-react';
-import { IActivity } from './../../models/Activity';
+import { IActivity } from '../../models/activity';
 import { NavBar } from '../navbar/NavBar';
+import { ActivityDashboard } from '../activity-dashboard/ActivityDashboard';
+
+
 
 
 const App = () => {
@@ -16,10 +19,8 @@ const App = () => {
   return (
     <Fragment>
       <NavBar />
-      <Container style={{paddingTop: "7em"}}>
-        <List>
-          { activities.map((item) => <ListItem key={item.id}>{item.title}</ListItem>) }
-        </List>
+      <Container style={{ paddingTop: "7em" }}>
+        <ActivityDashboard activities={activities}></ActivityDashboard>
       </Container>
     </Fragment>
   );
