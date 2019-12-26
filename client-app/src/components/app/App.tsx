@@ -1,7 +1,6 @@
 import React, { useEffect, Fragment, useContext } from "react";
 import { Container } from "semantic-ui-react";
 import NavBar from "../navbar/NavBar";
-import ActivityDashboard from "../activity-dashboard/ActivityDashboard";
 import Loading from "../loading/Loading";
 import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
@@ -15,13 +14,12 @@ const App = () => {
   const activityStore = useContext(ActivityStore);
   const {
     loadActivities,
-    loading,
-    activityRegistry
+    loading
   } = activityStore;
 
   useEffect(() => {
     loadActivities();
-  }, [activityStore]);
+  }, [loadActivities]);
 
   if (loading) {
     return <Loading content="Loading activities ..." />;
@@ -31,10 +29,10 @@ const App = () => {
     <Fragment>
       <NavBar />
       <Container style={{ paddingTop: "7em" }}>
-        <Route exact path="/" component={HomePage}/>
-        <Route path="/activities" component={ActivitiesPage}/>
-        <Route path="/activities/:id" />
-        <Route path="/create" component={FormPage}/>
+        <Route exact path="/" component={HomePage} />
+        <Route exact path="/activities" component={ActivitiesPage} />
+        <Route path="/activities/:id" render={({ match }) => <DetailsPage id={String(match.params.id)} />} />
+        <Route path="/create" component={FormPage} />
       </Container>
     </Fragment>
   );

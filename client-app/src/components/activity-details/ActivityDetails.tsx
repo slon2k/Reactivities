@@ -1,17 +1,17 @@
 import React, { useContext } from "react";
-import { IActivity } from "../../models/activity";
 import { Card, Image, ButtonGroup, Button } from "semantic-ui-react";
 import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
+import Loading from "../loading/Loading";
 
-interface IProps {
-  activity: IActivity;
-}
-
-const ActivityDetails: React.FC<IProps> = ({ activity }) => {
-  const { setEditMode, clearSelectedActivity, submitting } = useContext(
+const ActivityDetails: React.FC= () => {
+  const { selectedActivity :activity, setEditMode, clearSelectedActivity, submitting, loading } = useContext(
     ActivityStore
   );
+
+  if (loading || !activity) {
+    return <Loading content="Loading activity ..." />
+  }
 
   return (
     <Card fluid>

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Menu, Container, Button } from "semantic-ui-react";
 import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const NavBar: React.FC = () => {
   const { setEditMode, clearSelectedActivity} = useContext(ActivityStore);
@@ -12,7 +12,7 @@ const NavBar: React.FC = () => {
       <Container>
         <Menu.Item header exact as={NavLink} to="/">
           <img
-            src="assets/logo.png"
+            src="/assets/logo.png"
             alt="logo"
             style={{ marginRight: "15px" }}
           />

@@ -37,6 +37,24 @@ class ActivityStore {
     }
   };
 
+  @action loadActivity = async (id: string) => {
+    let activity = this.activityRegistry.get(id);
+    if (activity === undefined) {
+      this.loading = true;
+      try {
+        const response = await api.Activities.details(id);
+        runInAction("loading details", () => {
+          this.activityRegistry.set(response.id, response);
+          this.selectedActivity = response;
+          this.loading = false;
+        });
+      } catch (error) {
+        console.log(error);
+        runInAction("loading details error", () => this.loading = false);
+      }
+    }
+  }
+
   @action selectActivity = (id: string) => {
     const activity = this.activityRegistry.get(id);
     if (activity !== undefined) {
