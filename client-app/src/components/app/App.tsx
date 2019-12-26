@@ -1,77 +1,33 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useContext } from "react";
 import { Container } from "semantic-ui-react";
-import { IActivity } from "../../models/activity";
 import { NavBar } from "../navbar/NavBar";
 import { ActivityDashboard } from "../activity-dashboard/ActivityDashboard";
-import * as api from "../../services/api";
 import { Loading } from "../loading/Loading";
+import { ActivityStore } from "../../store";
+import { observer } from "mobx-react-lite";
 
 const App = () => {
-  const [activities, setActivities] = useState<IActivity[]>([]);
-  const [editMode, setEditMode] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(
-    null
-  );
-
-  const selectActivity = (id: string) => {
-    setEditMode(false);
-    const index = activities.findIndex(item => item.id === id);
-    if (index > -1) {
-      setSelectedActivity(activities[index]);
-    }
-  };
-
-  const clearSelectedActivity = () => {
-    setSelectedActivity(null);
-  };
-
-  const createActivity = (activity: IActivity) => {
-    setSubmitting(true);
-    api.Activities.create(activity).then(() => {
-      setActivities([...activities, activity]);
-      setSelectedActivity(activity);
-      setEditMode(false);
-      setSubmitting(false);
-    });
-  };
-
-  const updateActivity = (activity: IActivity) => {
-    setSubmitting(true);
-    api.Activities.update(activity).then(() => {
-      setActivities([
-        ...activities.filter(item => item.id !== activity.id),
-        activity
-      ]);
-      setSelectedActivity(activity);
-      setEditMode(false);
-      setSubmitting(false);
-    });
-  };
-
-  const deleteActivity = (id: string) => {
-    api.Activities.delete(id).then(() => {
-      setActivities([...activities.filter(item => item.id !== id)]);
-      if (selectedActivity && selectedActivity.id === id) {
-        clearSelectedActivity();
-      }
-    });
-  };
+  const {
+    activities,
+    loadActivities,
+    loading,
+    selectedActivity,
+    submitting,
+    editMode, 
+    selectActivity,
+    clearSelectedActivity,
+    createActivity,
+    updateActivity,
+    deleteActivity,
+    setEditMode
+  } = useContext(ActivityStore);
 
   useEffect(() => {
-    api.Activities.list().then(response => {
-      const activities: IActivity[] = [];
-      response.forEach(item => {
-        item.date = item.date.split(".")[0];
-        activities.push(item);
-      });
-      setActivities(activities);
-    }).then(() => setLoading(false));
-  }, []);
+    loadActivities();
+  }, [ActivityStore]);
 
   if (loading) {
-    return <Loading content="Loading activities ..."/>
+    return <Loading content="Loading activities ..." />;
   }
 
   return (
@@ -98,4 +54,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default observer(App);
