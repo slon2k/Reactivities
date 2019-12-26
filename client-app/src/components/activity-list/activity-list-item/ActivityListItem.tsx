@@ -4,6 +4,7 @@ import { IActivity } from "../../../models/activity";
 
 interface IProps {
   activity: IActivity;
+  deleting: boolean;
   selectActivity: (id: string) => void;
   deleteActivity: (id: string) => void;
 }
@@ -11,10 +12,10 @@ interface IProps {
 export const ActivityListItem: React.FC<IProps> = ({
   activity,
   selectActivity,
-  deleteActivity
+  deleteActivity,
+  deleting
 }) => {
 
-  const [deleting, setDeleting] = useState(false);
   return (
     <Item>
       <Item.Content>
@@ -35,7 +36,6 @@ export const ActivityListItem: React.FC<IProps> = ({
           />
           <Button
             onClick={() => {
-              setDeleting(true);
               deleteActivity(activity.id);              
             }}
             loading={deleting}
