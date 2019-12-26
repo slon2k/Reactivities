@@ -1,30 +1,21 @@
 import React, { useEffect, Fragment, useContext } from "react";
 import { Container } from "semantic-ui-react";
-import { NavBar } from "../navbar/NavBar";
-import { ActivityDashboard } from "../activity-dashboard/ActivityDashboard";
-import { Loading } from "../loading/Loading";
+import NavBar from "../navbar/NavBar";
+import ActivityDashboard from "../activity-dashboard/ActivityDashboard";
+import Loading from "../loading/Loading";
 import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
 
 const App = () => {
+  const activityStore = useContext(ActivityStore);
   const {
-    activities,
     loadActivities,
     loading,
-    selectedActivity,
-    submitting,
-    editMode, 
-    selectActivity,
-    clearSelectedActivity,
-    createActivity,
-    updateActivity,
-    deleteActivity,
-    setEditMode
-  } = useContext(ActivityStore);
+  } = activityStore;
 
   useEffect(() => {
     loadActivities();
-  }, [ActivityStore]);
+  }, [activityStore]);
 
   if (loading) {
     return <Loading content="Loading activities ..." />;
@@ -32,23 +23,9 @@ const App = () => {
 
   return (
     <Fragment>
-      <NavBar
-        setEditMode={setEditMode}
-        clearSelectedActivity={clearSelectedActivity}
-      />
+      <NavBar />
       <Container style={{ paddingTop: "7em" }}>
-        <ActivityDashboard
-          activities={activities}
-          selectedActivity={selectedActivity}
-          selectActivity={selectActivity}
-          editMode={editMode}
-          setEditMode={setEditMode}
-          clearSelectedActivity={clearSelectedActivity}
-          createActivity={createActivity}
-          updateActivity={updateActivity}
-          deleteActivity={deleteActivity}
-          submitting={submitting}
-        />
+        <ActivityDashboard />
       </Container>
     </Fragment>
   );

@@ -1,66 +1,28 @@
-import React from "react";
-import { IActivity } from "../../models/activity";
+import React, { useContext } from "react";
 import { Grid } from "semantic-ui-react";
-import { ActivityList } from "../activity-list/ActivityList";
-import { ActivityDetails } from "../activity-details/ActivityDetails";
-import { ActivityForm } from "../activity-form/ActivityForm";
+import ActivityList from "../activity-list/ActivityList";
+import ActivityDetails from "../activity-details/ActivityDetails";
+import ActivityForm from "../activity-form/ActivityForm";
+import { ActivityStore } from "../../store";
+import { observer } from "mobx-react-lite";
 
-interface IProps {
-  activities: IActivity[];
-  selectActivity: (id: string) => void;
-  clearSelectedActivity: () => void;
-  selectedActivity: IActivity | null;
-  editMode: boolean;
-  setEditMode: (mode: boolean) => void;
-  createActivity: (activity: IActivity) => void;
-  updateActivity: (activity: IActivity) => void;
-  deleteActivity: (id: string) => void;
-  submitting: boolean;
-}
-
-export const ActivityDashboard: React.FC<IProps> = ({
-  activities,
-  selectedActivity,
-  clearSelectedActivity,
-  selectActivity,
-  editMode,
-  setEditMode,
-  createActivity,
-  updateActivity,
-  deleteActivity,
-  submitting
-}) => {
+const ActivityDashboard: React.FC = () => {
+  const { selectedActivity, editMode } = useContext(ActivityStore);
   const id: string = selectedActivity ? selectedActivity.id : "0";
 
   return (
     <Grid>
       <Grid.Column width={10}>
-        <ActivityList
-          activities={activities}
-          selectActivity={selectActivity}
-          deleteActivity={deleteActivity}
-        />
+        <ActivityList />
       </Grid.Column>
       <Grid.Column width={6}>
         {selectedActivity && !editMode && (
-          <ActivityDetails
-            activity={selectedActivity}
-            setEditMode={setEditMode}
-            clearSelectedActivity={clearSelectedActivity}
-            submitting={submitting}
-          />
+          <ActivityDetails activity={selectedActivity} />
         )}
-        {editMode && (
-          <ActivityForm
-            key={id}
-            setEditMode={setEditMode}
-            activity={selectedActivity}
-            createActivity={createActivity}
-            updateActivity={updateActivity}
-            submitting={submitting}
-          />
-        )}
+        {editMode && <ActivityForm key={id} />}
       </Grid.Column>
     </Grid>
   );
 };
+
+export default observer(ActivityDashboard);

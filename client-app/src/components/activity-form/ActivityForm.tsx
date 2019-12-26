@@ -1,23 +1,20 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useContext } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
 import { IActivity } from "../../models/activity";
 import { v4 as uuid } from "uuid";
+import { ActivityStore } from "../../store";
+import { observer } from "mobx-react-lite";
 
-interface IProps {
-  setEditMode: (mode: boolean) => void;
-  activity: IActivity | null;
-  createActivity: (activity: IActivity) => void;
-  updateActivity: (activity: IActivity) => void;
-  submitting: boolean;
-}
+const ActivityForm: React.FC = () => {
+  const activityStore = useContext(ActivityStore);
+  const {
+    setEditMode,
+    selectedActivity: activity,
+    createActivity,
+    updateActivity,
+    submitting
+  } = activityStore;
 
-export const ActivityForm: React.FC<IProps> = ({
-  setEditMode,
-  activity,
-  createActivity,
-  updateActivity,
-  submitting
-}) => {
   const initialActivity: IActivity = {
     id: "",
     title: "",
@@ -38,7 +35,7 @@ export const ActivityForm: React.FC<IProps> = ({
   };
 
   const handleSubmit = () => {
-    if (form.id !== '') {
+    if (form.id !== "") {
       console.log("Updating ...", form);
       updateActivity(form);
     } else {
@@ -46,7 +43,6 @@ export const ActivityForm: React.FC<IProps> = ({
       console.log("Creating ...", form);
       createActivity(form);
     }
-
   };
 
   return (
@@ -89,7 +85,13 @@ export const ActivityForm: React.FC<IProps> = ({
           value={form.venue}
           onChange={handleChange}
         />
-        <Button floated="right" positive type="submit" loading={submitting} content="Submit" />
+        <Button
+          floated="right"
+          positive
+          type="submit"
+          loading={submitting}
+          content="Submit"
+        />
         <Button
           floated="right"
           type="button"
@@ -100,3 +102,5 @@ export const ActivityForm: React.FC<IProps> = ({
     </Segment>
   );
 };
+
+export default observer(ActivityForm);

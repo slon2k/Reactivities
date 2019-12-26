@@ -1,19 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ItemGroup, Segment } from "semantic-ui-react";
 import { ActivityListItem } from "./activity-list-item/ActivityListItem";
 import { IActivity } from "../../models/activity";
+import { ActivityStore } from "../../store";
+import { observer } from "mobx-react-lite";
 
-interface IProps {
-  activities: IActivity[];
-  selectActivity: (id: string) => void;
-  deleteActivity: (id: string) => void;
-}
+const ActivityList: React.FC = () => {
+  const {
+    activities,
+    selectActivity,
+    deleteActivity
+  } = useContext(ActivityStore);
 
-export const ActivityList: React.FC<IProps> = ({
-  activities,
-  selectActivity,
-  deleteActivity
-}) => {
   return (
     <Segment clearing>
       <ItemGroup divided>
@@ -29,3 +27,5 @@ export const ActivityList: React.FC<IProps> = ({
     </Segment>
   );
 };
+
+export default observer(ActivityList);

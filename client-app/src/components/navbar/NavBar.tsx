@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Menu, Container, Button } from "semantic-ui-react";
+import { ActivityStore } from "../../store";
+import { observer } from "mobx-react-lite";
 
-interface IProps {
-  setEditMode: (mode: boolean) => void;
-  clearSelectedActivity: () => void;
-}
+const NavBar: React.FC = () => {
+  const { setEditMode, clearSelectedActivity} = useContext(ActivityStore);
 
-export const NavBar: React.FC<IProps> = ({ setEditMode, clearSelectedActivity }) => {
   return (
     <Menu inverted fixed="top">
       <Container>
@@ -33,3 +32,5 @@ export const NavBar: React.FC<IProps> = ({ setEditMode, clearSelectedActivity })
     </Menu>
   );
 };
+
+export default observer(NavBar);
