@@ -14,7 +14,6 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({activity, history
   
   const activityStore = useContext(ActivityStore);
   const {
-    setEditMode,
     createActivity,
     updateActivity,
     submitting
@@ -105,7 +104,6 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({activity, history
           floated="right"
           type="button"
           content="Cancel"
-          onClick={() => setEditMode(false)}
         />
       </Form>
     </Segment>

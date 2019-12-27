@@ -9,7 +9,6 @@ class ActivityStore {
   @observable activityRegistry = new Map<string, IActivity>();
   @observable loading = false;
   @observable submitting = false;
-  @observable editMode = false;
   @observable selectedActivity: IActivity | null = null;
   @observable deleting = new Set<string>();
 
@@ -78,13 +77,11 @@ class ActivityStore {
         this.activityRegistry.set(activity.id, activity);
         this.submitting = false;
         this.selectedActivity = activity;
-        this.editMode = false;
       });
     } catch (error) {
       console.log(error);
       runInAction("Creating error", () => {
         this.submitting = false;
-        this.editMode = false;
       });
     }
   };
@@ -97,13 +94,11 @@ class ActivityStore {
         this.activityRegistry.set(activity.id, activity);
         this.submitting = false;
         this.selectedActivity = activity;
-        this.editMode = false;
       });
     } catch (error) {
       console.log(error);
       runInAction("Updating error", () => {
         this.submitting = false;
-        this.editMode = false;
       });
     }
   };
@@ -127,9 +122,6 @@ class ActivityStore {
     }
   };
 
-  @action setEditMode = (mode: boolean) => {
-    this.editMode = mode;
-  };
 }
 
 export default createContext(new ActivityStore());

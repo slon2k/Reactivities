@@ -11,7 +11,7 @@ interface IProps {
 
 
 const ActivityDetails: React.FC<IProps> = ({activity}) => {
-  const { setEditMode, clearSelectedActivity, submitting } = useContext(
+  const { clearSelectedActivity, submitting } = useContext(
     ActivityStore
   );
 
@@ -40,7 +40,6 @@ const ActivityDetails: React.FC<IProps> = ({activity}) => {
             loading={submitting}
             color="blue"
             content="Edit"
-            onClick={() => setEditMode(true)}
           />
           <Button
             as={Link} 
