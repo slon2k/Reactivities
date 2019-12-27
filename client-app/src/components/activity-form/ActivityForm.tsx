@@ -4,12 +4,16 @@ import { IActivity } from "../../models/activity";
 import { v4 as uuid } from "uuid";
 import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
+import { Link } from "react-router-dom";
 
-const ActivityForm: React.FC = () => {
+interface IProps {
+  activity?: IActivity
+}
+
+const ActivityForm: React.FC<IProps> = ({activity}) => {
   const activityStore = useContext(ActivityStore);
   const {
     setEditMode,
-    selectedActivity: activity,
     createActivity,
     updateActivity,
     submitting
@@ -93,6 +97,8 @@ const ActivityForm: React.FC = () => {
           content="Submit"
         />
         <Button
+          as={Link}
+          to={`/activities/${form.id}`}
           floated="right"
           type="button"
           content="Cancel"

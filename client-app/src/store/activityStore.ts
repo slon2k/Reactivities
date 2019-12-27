@@ -37,6 +37,28 @@ class ActivityStore {
     }
   };
 
+  @action loadActivity = async (id: string) => {
+    const activity = this.activityRegistry.get(id);
+    if (activity !== undefined) {
+      this.selectActivity(id);
+    } else {
+      this.loading = true;
+      try {
+        const response = await api.Activities.details(id);
+        runInAction("loading activity", () => {
+          this.activityRegistry.set(response.id, response);
+          this.selectActivity(id);
+          this.loading = false;
+        })
+      } catch (error) {
+        console.log(error);
+        runInAction("loading activity error", () => {
+          this.loading = false;
+        })        
+      }
+    }
+  }
+
   @action selectActivity = (id: string) => {
     const activity = this.activityRegistry.get(id);
     if (activity !== undefined) {

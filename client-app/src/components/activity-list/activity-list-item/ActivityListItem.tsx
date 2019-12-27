@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Item, Button, Label } from "semantic-ui-react";
 import { IActivity } from "../../../models/activity";
+import { Link } from "react-router-dom";
 
 interface IProps {
   activity: IActivity;
@@ -11,7 +12,6 @@ interface IProps {
 
 export const ActivityListItem: React.FC<IProps> = ({
   activity,
-  selectActivity,
   deleteActivity,
   deleting
 }) => {
@@ -29,7 +29,8 @@ export const ActivityListItem: React.FC<IProps> = ({
         </Item.Description>
         <Item.Extra>
           <Button
-            onClick={() => selectActivity(activity.id)}
+            as={Link}
+            to={`/activities/${activity.id}`}
             floated="right"
             color="blue"
             content="View"
