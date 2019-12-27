@@ -4,12 +4,16 @@ import { IActivity } from "../../models/activity";
 import { v4 as uuid } from "uuid";
 import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
+import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 
-const ActivityForm: React.FC = () => {
+interface IProps {
+  activity?: IActivity
+}
+
+const ActivityForm: React.FC<IProps & RouteComponentProps> = ({activity, history}) => {
+  
   const activityStore = useContext(ActivityStore);
   const {
-    setEditMode,
-    selectedActivity: activity,
     createActivity,
     updateActivity,
     submitting
@@ -34,14 +38,16 @@ const ActivityForm: React.FC = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (form.id !== "") {
       console.log("Updating ...", form);
-      updateActivity(form);
+      await updateActivity(form);
+      history.push(`/activities/${form.id}`);
     } else {
       form.id = uuid();
       console.log("Creating ...", form);
-      createActivity(form);
+      await createActivity(form);
+      history.push(`/activities/${form.id}`);
     }
   };
 
@@ -93,14 +99,15 @@ const ActivityForm: React.FC = () => {
           content="Submit"
         />
         <Button
+          as={Link}
+          to={`/activities/${form.id}`}
           floated="right"
           type="button"
           content="Cancel"
-          onClick={() => setEditMode(false)}
         />
       </Form>
     </Segment>
   );
 };
 
-export default observer(ActivityForm);
+export default withRouter(observer(ActivityForm));

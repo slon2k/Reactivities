@@ -1,8 +1,8 @@
 import React from "react";
 import ActivityForm from "../components/activity-form/ActivityForm";
 
-const FormPage = () => {
+const CreatePage = () => {
   return <ActivityForm />;
 };
 
-export default FormPage;
+export default CreatePage;

@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite";
 import { NavLink } from "react-router-dom";
 
 const NavBar: React.FC = () => {
-  const { setEditMode, clearSelectedActivity} = useContext(ActivityStore);
+  const { clearSelectedActivity} = useContext(ActivityStore);
 
   return (
     <Menu inverted fixed="top">
@@ -21,10 +21,7 @@ const NavBar: React.FC = () => {
         <Menu.Item name="Activities" as={NavLink} to="/activities" />
         <Menu.Item as={NavLink} to="/create">
           <Button
-            onClick={() => {
-              clearSelectedActivity();
-              setEditMode(true);
-            }}
+            onClick={() => clearSelectedActivity()}
             positive
             content="Create Activity"
           />

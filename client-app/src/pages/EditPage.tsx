@@ -1,16 +1,15 @@
-import React, { useContext, useEffect } from "react";
-import ActivityDetails from "../components/activity-details/ActivityDetails";
-import { Segment } from "semantic-ui-react";
+import React, { useEffect, useContext } from "react";
+import ActivityForm from "../components/activity-form/ActivityForm";
 import { RouteComponentProps } from "react-router-dom";
 import { ActivityStore } from "../store";
-import Loading from "../components/loading/Loading";
 import { observer } from "mobx-react-lite";
+import Loading from "../components/loading/Loading";
 
 interface IParams {
   id: string
 }
 
-const DetailsPage : React.FC<RouteComponentProps<IParams>> = ({match}) => {
+const EditPage : React.FC<RouteComponentProps<IParams>> = ({match}) => {
   const {loadActivity, selectedActivity: activity, loading} = useContext(ActivityStore);
   const { id } = match.params;
 
@@ -21,13 +20,8 @@ const DetailsPage : React.FC<RouteComponentProps<IParams>> = ({match}) => {
   if (loading || !activity ) {
     return <Loading content="Loading activity ..."/>
   }
-
-  return (
-    <Segment>
-      <ActivityDetails activity={activity}/>      
-    </Segment>
   
-  );
+  return <ActivityForm activity={activity}/>;
 };
 
-export default observer(DetailsPage);
+export default observer(EditPage);

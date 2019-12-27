@@ -5,18 +5,9 @@ import { Link } from "react-router-dom";
 
 interface IProps {
   activity: IActivity;
-  deleting: boolean;
-  selectActivity: (id: string) => void;
-  deleteActivity: (id: string) => void;
 }
 
-export const ActivityListItem: React.FC<IProps> = ({
-  activity,
-  selectActivity,
-  deleteActivity,
-  deleting
-}) => {
-
+export const ActivityListItem: React.FC<IProps> = ({ activity }) => {
   return (
     <Item>
       <Item.Content>
@@ -32,19 +23,9 @@ export const ActivityListItem: React.FC<IProps> = ({
           <Button
             as={Link}
             to={`/activities/${activity.id}`}
-            onClick={() => selectActivity(activity.id)}
             floated="right"
             color="blue"
             content="View"
-          />
-          <Button
-            onClick={() => {
-              deleteActivity(activity.id);              
-            }}
-            loading={deleting}
-            floated="right"
-            color="red"
-            content="Delete"
           />
           <Label basic content={activity.category} />
         </Item.Extra>

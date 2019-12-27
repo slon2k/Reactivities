@@ -1,4 +1,4 @@
-import { observable, action, computed, configure, runInAction } from "mobx";
+import { observable, action, computed, configure, runInAction, entries } from "mobx";
 import { createContext } from "react";
 import { IActivity } from "../models/activity";
 import { api } from "../services";
@@ -9,14 +9,28 @@ class ActivityStore {
   @observable activityRegistry = new Map<string, IActivity>();
   @observable loading = false;
   @observable submitting = false;
-  @observable editMode = false;
   @observable selectedActivity: IActivity | null = null;
   @observable deleting = new Set<string>();
 
   @computed get activitiesByDate() {
     const activities = Array.from<IActivity>(this.activityRegistry.values());
-    return activities.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+    return this.groupActivitiesByDate(activities);
+    //return activities.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
   }
+
+  groupActivitiesByDate(activities: IActivity[]) {
+    const sortedActivities = activities.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+
+    return Object.entries(
+      sortedActivities.reduce((activities, activity) => {
+        const date = activity.date.split("T")[0];
+        activities[date] = activities[date]
+          ? [...activities[date], activity]
+          : [activity];
+        return activities
+      }, {} as {[key: string]: IActivity[]})
+    );
+  } 
 
   @action loadActivities = async () => {
     this.loading = true;
@@ -38,19 +52,23 @@ class ActivityStore {
   };
 
   @action loadActivity = async (id: string) => {
-    let activity = this.activityRegistry.get(id);
-    if (activity === undefined) {
+    const activity = this.activityRegistry.get(id);
+    if (activity !== undefined) {
+      this.selectActivity(id);
+    } else {
       this.loading = true;
       try {
         const response = await api.Activities.details(id);
-        runInAction("loading details", () => {
+        runInAction("loading activity", () => {
           this.activityRegistry.set(response.id, response);
-          this.selectedActivity = response;
+          this.selectActivity(id);
           this.loading = false;
-        });
+        })
       } catch (error) {
         console.log(error);
-        runInAction("loading details error", () => this.loading = false);
+        runInAction("loading activity error", () => {
+          this.loading = false;
+        })        
       }
     }
   }
@@ -74,13 +92,11 @@ class ActivityStore {
         this.activityRegistry.set(activity.id, activity);
         this.submitting = false;
         this.selectedActivity = activity;
-        this.editMode = false;
       });
     } catch (error) {
       console.log(error);
       runInAction("Creating error", () => {
         this.submitting = false;
-        this.editMode = false;
       });
     }
   };
@@ -93,13 +109,11 @@ class ActivityStore {
         this.activityRegistry.set(activity.id, activity);
         this.submitting = false;
         this.selectedActivity = activity;
-        this.editMode = false;
       });
     } catch (error) {
       console.log(error);
       runInAction("Updating error", () => {
         this.submitting = false;
-        this.editMode = false;
       });
     }
   };
@@ -123,9 +137,6 @@ class ActivityStore {
     }
   };
 
-  @action setEditMode = (mode: boolean) => {
-    this.editMode = mode;
-  };
 }
 
 export default createContext(new ActivityStore());

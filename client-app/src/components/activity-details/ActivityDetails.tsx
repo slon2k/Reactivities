@@ -2,16 +2,20 @@ import React, { useContext } from "react";
 import { Card, Image, ButtonGroup, Button } from "semantic-ui-react";
 import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
-import Loading from "../loading/Loading";
+import { Link } from "react-router-dom";
+import { IActivity } from "../../models/activity";
 
-const ActivityDetails: React.FC= () => {
-  const { selectedActivity :activity, setEditMode, clearSelectedActivity, submitting, loading } = useContext(
+interface IProps {
+  activity: IActivity
+}
+
+
+const ActivityDetails: React.FC<IProps> = ({activity}) => {
+  const { clearSelectedActivity, submitting } = useContext(
     ActivityStore
   );
 
-  if (loading || !activity) {
-    return <Loading content="Loading activity ..." />
-  }
+  const {id} = activity;
 
   return (
     <Card fluid>
@@ -30,13 +34,16 @@ const ActivityDetails: React.FC= () => {
       <Card.Content extra>
         <ButtonGroup widths={2}>
           <Button
+            as={Link}
+            to={`/edit/${id}`}
             basic
             loading={submitting}
             color="blue"
             content="Edit"
-            onClick={() => setEditMode(true)}
           />
           <Button
+            as={Link} 
+            to="/activities"
             basic
             color="grey"
             content="Cancel"
