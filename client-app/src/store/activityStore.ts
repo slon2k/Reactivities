@@ -1,4 +1,4 @@
-import { observable, action, computed, configure, runInAction } from "mobx";
+import { observable, action, computed, configure, runInAction, entries } from "mobx";
 import { createContext } from "react";
 import { IActivity } from "../models/activity";
 import { api } from "../services";
@@ -14,8 +14,23 @@ class ActivityStore {
 
   @computed get activitiesByDate() {
     const activities = Array.from<IActivity>(this.activityRegistry.values());
-    return activities.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+    return this.groupActivitiesByDate(activities);
+    //return activities.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
   }
+
+  groupActivitiesByDate(activities: IActivity[]) {
+    const sortedActivities = activities.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+
+    return Object.entries(
+      sortedActivities.reduce((activities, activity) => {
+        const date = activity.date.split("T")[0];
+        activities[date] = activities[date]
+          ? [...activities[date], activity]
+          : [activity];
+        return activities
+      }, {} as {[key: string]: IActivity[]})
+    );
+  } 
 
   @action loadActivities = async () => {
     this.loading = true;
