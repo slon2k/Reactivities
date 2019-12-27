@@ -26,15 +26,6 @@ const App = () => {
 
   return (
     <Fragment>
-<<<<<<< HEAD
-      <NavBar />
-      <Container style={{ paddingTop: "7em" }}>
-        <Route exact path="/" component={HomePage} />
-        <Route exact path="/activities" component={ActivitiesPage} />
-        <Route path="/activities/:id" render={({ match }) => <DetailsPage id={String(match.params.id)} />} />
-        <Route path="/create" component={FormPage} />
-      </Container>
-=======
       <Route exact path="/" component={HomePage} />
       <Route
         path={"/(.+)"}
@@ -54,7 +45,6 @@ const App = () => {
           );
         }}
       />
->>>>>>> b7e280b5ce90034223321d4b4b1ead887af2b15e
     </Fragment>
   );
 };
