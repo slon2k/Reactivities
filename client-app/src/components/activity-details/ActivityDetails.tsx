@@ -1,26 +1,21 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Card, Image, ButtonGroup, Button } from "semantic-ui-react";
 import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
-import Loading from "../loading/Loading";
 import { Link } from "react-router-dom";
+import { IActivity } from "../../models/activity";
 
 interface IProps {
-  id: string;
+  activity: IActivity
 }
 
-const ActivityDetails: React.FC<IProps> = ({id}) => {
-  const { setEditMode, clearSelectedActivity, submitting, loadActivity, loading, selectedActivity: activity } = useContext(
+
+const ActivityDetails: React.FC<IProps> = ({activity}) => {
+  const { setEditMode, clearSelectedActivity, submitting } = useContext(
     ActivityStore
   );
 
-  useEffect(() => {
-    loadActivity(id)
-  }, [loadActivity, id])
-
-  if (!activity || loading) {
-    return <Loading content={`Loading activity ... `} />
-  }
+  const {id} = activity;
 
   return (
     <Card fluid>
