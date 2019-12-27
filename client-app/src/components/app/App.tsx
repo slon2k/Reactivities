@@ -12,11 +12,9 @@ import EditPage from "../../pages/EditPage";
 import DetailsPage from "../../pages/DetailsPage";
 
 const App = () => {
+
   const activityStore = useContext(ActivityStore);
-  const {
-    loadActivities,
-    loading,
-  } = activityStore;
+  const { loadActivities, loading } = activityStore;
 
   useEffect(() => {
     loadActivities();
@@ -28,16 +26,25 @@ const App = () => {
 
   return (
     <Fragment>
-      <NavBar />
-      <Container style={{ paddingTop: "7em" }}>
-        <Switch>
-          <Route exact path="/" component={HomePage}/>
-          <Route exact path="/activities" component={ActivitiesPage}/>
-          <Route path="/activities/:id" component={DetailsPage} />
-          <Route path="/create" component={CreatePage}/>   
-          <Route path="/edit/:id" component={EditPage}/>    
-        </Switch>
-      </Container>
+      <Route exact path="/" component={HomePage} />
+      <Route
+        path={"/(.+)"}
+        render={() => {
+          return (
+            <Fragment>
+              <NavBar />
+              <Container style={{ paddingTop: "7em" }}>
+              <Switch>
+                <Route exact path="/activities" component={ActivitiesPage} />
+                <Route path="/activities/:id" component={DetailsPage} />
+                <Route path="/create" component={CreatePage} />
+                <Route path="/edit/:id" component={EditPage} />                
+              </Switch>  
+              </Container>
+            </Fragment>
+          );
+        }}
+      />
     </Fragment>
   );
 };
