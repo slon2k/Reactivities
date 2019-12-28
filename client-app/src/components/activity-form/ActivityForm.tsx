@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, useContext } from "react";
-import { Segment, Form, Button } from "semantic-ui-react";
+import { Segment, Form, Button, Grid } from "semantic-ui-react";
 import { IActivity } from "../../models/activity";
 import { v4 as uuid } from "uuid";
 import { ActivityStore } from "../../store";
@@ -7,17 +7,15 @@ import { observer } from "mobx-react-lite";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 
 interface IProps {
-  activity?: IActivity
+  activity?: IActivity;
 }
 
-const ActivityForm: React.FC<IProps & RouteComponentProps> = ({activity, history}) => {
-  
+const ActivityForm: React.FC<IProps & RouteComponentProps> = ({
+  activity,
+  history
+}) => {
   const activityStore = useContext(ActivityStore);
-  const {
-    createActivity,
-    updateActivity,
-    submitting
-  } = activityStore;
+  const { createActivity, updateActivity, submitting } = activityStore;
 
   const initialActivity: IActivity = {
     id: "",
@@ -52,61 +50,65 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({activity, history
   };
 
   return (
-    <Segment clearing>
-      <Form onSubmit={handleSubmit}>
-        <Form.Input
-          placeholder="Title"
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-        />
-        <Form.TextArea
-          rows={2}
-          placeholder="Description"
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-        />
-        <Form.Input
-          placeholder="Category"
-          name="category"
-          value={form.category}
-          onChange={handleChange}
-        />
-        <Form.Input
-          type="datetime-local"
-          name="date"
-          value={form.date}
-          onChange={handleChange}
-        />
-        <Form.Input
-          placeholder="City"
-          name="city"
-          value={form.city}
-          onChange={handleChange}
-        />
-        <Form.Input
-          placeholder="Venue"
-          name="venue"
-          value={form.venue}
-          onChange={handleChange}
-        />
-        <Button
-          floated="right"
-          positive
-          type="submit"
-          loading={submitting}
-          content="Submit"
-        />
-        <Button
-          as={Link}
-          to={`/activities/${form.id}`}
-          floated="right"
-          type="button"
-          content="Cancel"
-        />
-      </Form>
-    </Segment>
+    <Grid>
+      <Grid.Column width={10}>
+        <Segment clearing>
+          <Form onSubmit={handleSubmit}>
+            <Form.Input
+              placeholder="Title"
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+            />
+            <Form.TextArea
+              rows={2}
+              placeholder="Description"
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+            />
+            <Form.Input
+              placeholder="Category"
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+            />
+            <Form.Input
+              type="datetime-local"
+              name="date"
+              value={form.date}
+              onChange={handleChange}
+            />
+            <Form.Input
+              placeholder="City"
+              name="city"
+              value={form.city}
+              onChange={handleChange}
+            />
+            <Form.Input
+              placeholder="Venue"
+              name="venue"
+              value={form.venue}
+              onChange={handleChange}
+            />
+            <Button
+              floated="right"
+              positive
+              type="submit"
+              loading={submitting}
+              content="Submit"
+            />
+            <Button
+              as={Link}
+              to={`/activities/${form.id}`}
+              floated="right"
+              type="button"
+              content="Cancel"
+            />
+          </Form>
+        </Segment>
+      </Grid.Column>
+    </Grid>
   );
 };
 
