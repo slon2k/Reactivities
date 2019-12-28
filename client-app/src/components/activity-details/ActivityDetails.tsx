@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Grid } from "semantic-ui-react";
-import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
 import { IActivity } from "../../models/activity";
 import ActivityDetailsHeader from "./activity-details-header/ActivityDetailsHeader";
@@ -13,15 +12,11 @@ interface IProps {
 }
 
 const ActivityDetails: React.FC<IProps> = ({ activity }) => {
-  const { clearSelectedActivity, submitting } = useContext(ActivityStore);
-
-  const { id } = activity;
-
   return (
     <Grid>
       <Grid.Column width={10}>
-        <ActivityDetailsHeader />
-        <ActivityDetailsInfo />
+        <ActivityDetailsHeader activity={activity} />
+        <ActivityDetailsInfo activity={activity} />
         <ActivityDetailsChat />
       </Grid.Column>
       <Grid.Column width={6}>
