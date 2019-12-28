@@ -8,14 +8,14 @@ import { IActivity } from "../../models/activity";
 const Group = (activities: IActivity[], group: string) => {
   return (
     <Fragment key={group}>
-      <Label size='large' color='blue'>{group}</Label>
-      <Segment clearing>
-        <ItemGroup divided>
-          {activities.map(item => (
-            <ActivityListItem activity={item} key={item.id} />
-          ))}
-        </ItemGroup>
-      </Segment>
+      <Label size="large" color="blue">
+        {group}
+      </Label>
+      <ItemGroup divided>
+        {activities.map(item => (
+          <ActivityListItem activity={item} key={item.id} />
+        ))}
+      </ItemGroup>
     </Fragment>
   );
 };
