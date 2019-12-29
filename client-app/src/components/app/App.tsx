@@ -10,6 +10,8 @@ import ActivitiesPage from "../../pages/ActivitiesPage";
 import CreatePage from "../../pages/CreatePage";
 import EditPage from "../../pages/EditPage";
 import DetailsPage from "../../pages/DetailsPage";
+import NotFound from "../../pages/NotFound";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
 
@@ -26,6 +28,7 @@ const App = () => {
 
   return (
     <Fragment>
+      <ToastContainer position='bottom-right' />
       <Route exact path="/" component={HomePage} />
       <Route
         path={"/(.+)"}
@@ -38,7 +41,8 @@ const App = () => {
                 <Route exact path="/activities" component={ActivitiesPage} />
                 <Route path="/activities/:id" component={DetailsPage} />
                 <Route path="/create" component={CreatePage} />
-                <Route path="/edit/:id" component={EditPage} />                
+                <Route path="/edit/:id" component={EditPage} />
+                <Route component={NotFound} />                
               </Switch>  
               </Container>
             </Fragment>

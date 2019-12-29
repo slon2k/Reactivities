@@ -65,10 +65,10 @@ class ActivityStore {
           this.loading = false;
         })
       } catch (error) {
-        console.log(error);
         runInAction("loading activity error", () => {
           this.loading = false;
-        })        
+        });
+        console.log(error);        
       }
     }
   }

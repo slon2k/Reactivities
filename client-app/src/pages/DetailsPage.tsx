@@ -18,9 +18,11 @@ const DetailsPage : React.FC<RouteComponentProps<IParams>> = ({match}) => {
     loadActivity(id)
   }, [loadActivity, id, activity]);
 
-  if (loading || !activity ) {
+  if (loading) {
     return <Loading content="Loading activity ..."/>
   }
+
+  if (!activity) return <h2>Activity not found</h2>;
 
   return (
     <Segment>
