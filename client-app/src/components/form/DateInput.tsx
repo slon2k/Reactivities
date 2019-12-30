@@ -12,12 +12,19 @@ const DateInput: React.FC<IProps> = ({
   meta: { touched, error },
   ...rest
 }) => {
+  console.log("DateInput props", input);
   return (
     <Form.Field error={touched && !!error} width={width}>
-      <DateTimePicker 
-        placeholder={placeholder}
-        value={new Date(input.value) || undefined}
+      <input
+        type="datetime-local"
+        name="date"
       />
+
+      {/*       <DateTimePicker 
+        placeholder={placeholder}
+        value={new Date(input.value) || null}
+        onChange={() => console.log("picker")}
+      /> */}
       {touched && error && (
         <Label basic color="red">
           {error}
