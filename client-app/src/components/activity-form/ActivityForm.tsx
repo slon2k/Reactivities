@@ -6,7 +6,7 @@ import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { Form as FinalForm, Field } from "react-final-form";
-import { TextInput, TextArea, SelectInput } from "../form";
+import { TextInput, TextArea, SelectInput, DateInput } from "../form";
 import { category } from "../../settings/categoryOptions";
 
 interface IProps {
@@ -24,7 +24,7 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({
     id: "",
     title: "",
     description: "",
-    date: "",
+    date: null,
     venue: "",
     category: "",
     city: ""
@@ -79,10 +79,9 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({
                     component={SelectInput}
                   />
                   <Field
-                    type="datetime-local"
                     name="date"
                     value={form.date}
-                    component={TextInput}
+                    component={DateInput}
                   />
                   <Field
                     placeholder="City"
