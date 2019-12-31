@@ -32,24 +32,14 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({
 
   const form = activity || initialActivity;
 
-  // const handleSubmit = async () => {
-  //   if (form.id !== "") {
-  //     console.log("Updating ...", form);
-  //     await updateActivity(form);
-  //     history.push(`/activities/${form.id}`);
-  //   } else {
-  //     form.id = uuid();
-  //     console.log("Creating ...", form);
-  //     await createActivity(form);
-  //     history.push(`/activities/${form.id}`);
-  //   }
-  // };
-
-  const handleFormSubmit = (values: any) => {
-    console.log(values);
+  const handleFormSubmit = (form: IActivity) => {
+    if (form.id !== "") {
+      updateActivity(form);
+    } else {
+      form.id = uuid();
+      createActivity(form);
+    }
   };
-
-  console.log("form", form)
 
   return (
     <Grid>
