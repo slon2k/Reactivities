@@ -4,19 +4,34 @@ import { IActivity } from "../../models/activity";
 import { v4 as uuid } from "uuid";
 import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
-import { Link, RouteComponentProps, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Form as FinalForm, Field } from "react-final-form";
 import { TextInput, TextArea, SelectInput, DateInput } from "../form";
 import { category } from "../../settings/categoryOptions";
+import {
+  combineValidators,
+  isRequired,
+  composeValidators,
+  hasLengthGreaterThan
+} from "revalidate";
 
 interface IProps {
   activity?: IActivity;
 }
 
-const ActivityForm: React.FC<IProps & RouteComponentProps> = ({
-  activity,
-  history
-}) => {
+const validate = combineValidators({
+  title: isRequired({ message: "The event title is required" }),
+  category: isRequired("Category"),
+  description: composeValidators(
+    isRequired("Description"),
+    hasLengthGreaterThan(4)({ message: "Description is too short" })
+  )(),
+  city: isRequired("City"),
+  venue: isRequired("Venue"),
+  date: isRequired("date")
+});
+
+const ActivityForm: React.FC<IProps> = ({ activity }) => {
   const activityStore = useContext(ActivityStore);
   const { createActivity, updateActivity, submitting } = activityStore;
 
@@ -46,9 +61,10 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({
       <Grid.Column width={10}>
         <Segment clearing>
           <FinalForm
-            initialValues = {form}
+            validate={validate}
+            initialValues={form}
             onSubmit={handleFormSubmit}
-            render={({ handleSubmit }) => {
+            render={({ handleSubmit, invalid, pristine }) => {
               return (
                 <Form onSubmit={handleSubmit}>
                   <Field
@@ -71,11 +87,7 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({
                     value={form.category}
                     component={SelectInput}
                   />
-                  <Field
-                    name="date"
-                    value={form.date}
-                    component={DateInput}
-                  />
+                  <Field name="date" value={form.date} component={DateInput} />
                   <Field
                     placeholder="City"
                     name="city"
@@ -90,6 +102,7 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({
                   />
                   <Button
                     floated="right"
+                    disabled={submitting || invalid || pristine}
                     positive
                     type="submit"
                     loading={submitting}
@@ -112,4 +125,4 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({
   );
 };
 
-export default withRouter(observer(ActivityForm));
+export default observer(ActivityForm);
