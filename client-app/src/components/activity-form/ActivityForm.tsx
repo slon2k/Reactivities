@@ -20,12 +20,11 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({
   const activityStore = useContext(ActivityStore);
   const { createActivity, updateActivity, submitting } = activityStore;
 
-  //const newDate = new Date();
   const initialActivity: IActivity = {
     id: "",
-    title: "New title",
+    title: "",
     description: "",
-    date: new Date(),
+    date: null,
     venue: "",
     category: "",
     city: ""
@@ -57,6 +56,7 @@ const ActivityForm: React.FC<IProps & RouteComponentProps> = ({
       <Grid.Column width={10}>
         <Segment clearing>
           <FinalForm
+            initialValues = {form}
             onSubmit={handleFormSubmit}
             render={({ handleSubmit }) => {
               return (
