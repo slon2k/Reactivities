@@ -34,7 +34,7 @@ namespace Application.User
                 RuleFor(x => x.Password).NotEmpty();
             }
         }
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, User>
         {
             private readonly DataContext _context;
             private readonly IJwtGenerator _jwtGenerator;
