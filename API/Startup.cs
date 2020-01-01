@@ -23,6 +23,8 @@ using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace API
 {
@@ -42,14 +44,22 @@ namespace API
             {
                 opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
+            
             services.AddCors(
                 option => option.AddPolicy("CorsPolicy",
                     policy => policy
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .WithOrigins("http://localhost:3000")));
+            
             services.AddMediatR(typeof(List.Handler).Assembly);
-            services.AddControllers()
+            
+            services.AddControllers(opt => {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                opt.Filters.Add(new AuthorizeFilter(policy));
+            })
                 .AddFluentValidation(cfg =>
                 {
                     cfg.RegisterValidatorsFromAssemblyContaining<Create>();
