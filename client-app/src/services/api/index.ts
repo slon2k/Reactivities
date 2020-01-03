@@ -1,3 +1,3 @@
-import { Activities } from "./api"
+import { Activities, User } from "./api"
 
-export { Activities }
+export { Activities, User }

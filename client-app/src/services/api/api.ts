@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { IActivity } from "../../models/activity";
+import { IUser, IUserForm } from "../../models/user"
 import { history } from "../..";
 import { toast } from "react-toastify";
 
@@ -64,3 +65,9 @@ export const Activities = {
     request.put(`/activities/${activity.id}`, activity),
   delete: (id: string) => request.get(`/activities/${id}`)
 };
+
+export const User = {
+  login: (user: IUserForm): Promise<IUser> => request.post("user/login", user),
+  register: (user: IUserForm): Promise<IUser> => request.post("user/register", user),
+  current: (): Promise<IUser> => request.get("/user")
+}
