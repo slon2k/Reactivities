@@ -1,9 +1,8 @@
-import { observable, action, computed, configure } from "mobx";
+import { observable, action, computed, runInAction } from "mobx";
 import { IUser, IUserForm } from "../models/user";
 import { api } from "../services";
 import { RootStore } from "./rootStore";
-
-configure({ enforceActions: "always" });
+import { history } from "../";
 
 export default class UserStore {
   rootStore: RootStore;
@@ -21,9 +20,11 @@ export default class UserStore {
   @action login = async (credentials: IUserForm) => {
     try {
       const user = await api.User.login(credentials);
-      this.user = user;
+      runInAction("Login", () => this.user = user);
+      history.push("/activities");
+      console.log(user);
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 }
