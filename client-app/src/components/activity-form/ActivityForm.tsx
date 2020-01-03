@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { Segment, Form, Button, Grid } from "semantic-ui-react";
 import { IActivity } from "../../models/activity";
 import { v4 as uuid } from "uuid";
-import { ActivityStore } from "../../store";
 import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
 import { Form as FinalForm, Field } from "react-final-form";
@@ -14,6 +13,7 @@ import {
   composeValidators,
   hasLengthGreaterThan
 } from "revalidate";
+import { StoreContext } from "../../store";
 
 interface IProps {
   activity?: IActivity;
@@ -32,8 +32,8 @@ const validate = combineValidators({
 });
 
 const ActivityForm: React.FC<IProps> = ({ activity }) => {
-  const activityStore = useContext(ActivityStore);
-  const { createActivity, updateActivity, submitting } = activityStore;
+  const Store = useContext(StoreContext);
+  const { createActivity, updateActivity, submitting } = Store.activityStore;
 
   const initialActivity: IActivity = {
     id: "",

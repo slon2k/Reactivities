@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import ActivityDetails from "../components/activity-details/ActivityDetails";
 import { Segment } from "semantic-ui-react";
 import { RouteComponentProps } from "react-router-dom";
-import { ActivityStore } from "../store";
+import { StoreContext } from "../store";
 import Loading from "../components/loading/Loading";
 import { observer } from "mobx-react-lite";
 
@@ -11,7 +11,8 @@ interface IParams {
 }
 
 const DetailsPage : React.FC<RouteComponentProps<IParams>> = ({match}) => {
-  const {loadActivity, selectedActivity: activity, loading} = useContext(ActivityStore);
+  const Store = useContext(StoreContext);
+  const {loadActivity, selectedActivity: activity, loading} = Store.activityStore;
   const { id } = match.params;
 
   useEffect(() => {

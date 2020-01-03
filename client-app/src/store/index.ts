@@ -1,3 +1,3 @@
-import ActivityStore from "./activityStore";
+import { StoreContext } from "./rootStore";
 
-export { ActivityStore };
+export { StoreContext };

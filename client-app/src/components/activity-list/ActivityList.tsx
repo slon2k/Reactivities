@@ -1,7 +1,7 @@
 import React, { useContext, Fragment } from "react";
 import { ItemGroup, Label } from "semantic-ui-react";
 import { ActivityListItem } from "./activity-list-item/ActivityListItem";
-import { ActivityStore } from "../../store";
+import { StoreContext } from "../../store";
 import { observer } from "mobx-react-lite";
 import { IActivity } from "../../models/activity";
 
@@ -21,7 +21,9 @@ const Group = (activities: IActivity[], group: string) => {
 };
 
 const ActivityList: React.FC = () => {
-  const { activitiesByDate } = useContext(ActivityStore);
+  
+  const Store = useContext(StoreContext);
+  const { activitiesByDate } = Store.activityStore;
 
   return (
     <Fragment>

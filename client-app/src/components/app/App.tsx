@@ -2,7 +2,7 @@ import React, { useEffect, Fragment, useContext } from "react";
 import { Container } from "semantic-ui-react";
 import NavBar from "../navbar/NavBar";
 import Loading from "../loading/Loading";
-import { ActivityStore } from "../../store";
+import { StoreContext } from "../../store";
 import { observer } from "mobx-react-lite";
 import { Route, Switch } from "react-router-dom";
 import HomePage from "../../pages/HomePage";
@@ -15,8 +15,8 @@ import { ToastContainer } from "react-toastify";
 
 const App = () => {
 
-  const activityStore = useContext(ActivityStore);
-  const { loadActivities, loading } = activityStore;
+  const Store = useContext(StoreContext);
+  const { loadActivities, loading } = Store.activityStore;
 
   useEffect(() => {
     loadActivities();

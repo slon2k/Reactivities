@@ -1,10 +1,17 @@
 import { observable, action, computed, configure } from "mobx";
 import { IUser, IUserForm } from "../models/user";
 import { api } from "../services";
+import { RootStore } from "./rootStore";
 
 configure({ enforceActions: "always" });
 
 export default class UserStore {
+  rootStore: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+  }
+
   @observable user: IUser | null = null;
 
   @computed get isLoggedIn() {

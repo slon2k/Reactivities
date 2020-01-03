@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import ActivityForm from "../components/activity-form/ActivityForm";
 import { RouteComponentProps } from "react-router-dom";
-import { ActivityStore } from "../store";
+import { StoreContext } from "../store";
 import { observer } from "mobx-react-lite";
 import Loading from "../components/loading/Loading";
 
@@ -10,7 +10,8 @@ interface IParams {
 }
 
 const EditPage : React.FC<RouteComponentProps<IParams>> = ({match}) => {
-  const {loadActivity, selectedActivity: activity, loading} = useContext(ActivityStore);
+  const Store = useContext(StoreContext);
+  const {loadActivity, selectedActivity: activity, loading} = Store.activityStore;
   const { id } = match.params;
 
   useEffect(() => {
