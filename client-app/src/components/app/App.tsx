@@ -12,6 +12,7 @@ import EditPage from "../../pages/EditPage";
 import DetailsPage from "../../pages/DetailsPage";
 import NotFound from "../../pages/NotFound";
 import { ToastContainer } from "react-toastify";
+import LoginForm from "../login-form/LoginForm";
 
 const App = () => {
 
@@ -42,6 +43,7 @@ const App = () => {
                 <Route path="/activities/:id" component={DetailsPage} />
                 <Route path="/create" component={CreatePage} />
                 <Route path="/edit/:id" component={EditPage} />
+                <Route path="/login" component={LoginForm} />
                 <Route component={NotFound} />                
               </Switch>  
               </Container>
