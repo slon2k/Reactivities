@@ -7,7 +7,7 @@ import { RootStore } from "./rootStore";
 
 export default class ActivityStore {
   rootStore: RootStore;
-  
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
   }

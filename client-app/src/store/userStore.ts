@@ -14,17 +14,24 @@ export default class UserStore {
   @observable user: IUser | null = null;
 
   @computed get isLoggedIn() {
-    return !!this.user
+    return !!this.user;
   };
 
   @action login = async (credentials: IUserForm) => {
     try {
       const user = await api.User.login(credentials);
-      runInAction("Login", () => this.user = user);
+      runInAction("Login", () => (this.user = user));
+      this.rootStore.commonStore.setToken(user.token);
       history.push("/activities");
       console.log(user);
     } catch (error) {
       throw error;
     }
-  }
+  };
+
+  @action logout = () => {
+    this.rootStore.commonStore.setToken(null);
+    this.user = null;
+    history.push("/");
+  };
 }

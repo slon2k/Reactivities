@@ -7,7 +7,7 @@ import { NavLink, Link } from "react-router-dom";
 const NavBar: React.FC = () => {
   const Store = useContext(StoreContext);
   const { clearSelectedActivity } = Store.activityStore;
-  const { user, isLoggedIn } = Store.userStore;
+  const { user, isLoggedIn, logout } = Store.userStore;
 
   return (
     <Menu inverted fixed="top">
@@ -30,8 +30,12 @@ const NavBar: React.FC = () => {
         </Menu.Item>
         {user && (
           <Menu.Item position="right">
-            <Image avatar spaced="right" src={"/assets/user.png"} />
-            <Dropdown pointing="top left" text="user">
+            <Image
+              avatar
+              spaced="right"
+              src={user.image || "/assets/user.png"}
+            />
+            <Dropdown pointing="top left" text={user.displayName}>
               <Dropdown.Menu>
                 <Dropdown.Item
                   as={Link}
@@ -39,11 +43,7 @@ const NavBar: React.FC = () => {
                   text="My profile"
                   icon="user"
                 />
-                <Dropdown.Item
-                  onClick={() => console.log("Logout")}
-                  text="Logout"
-                  icon="power"
-                />
+                <Dropdown.Item onClick={logout} text="Logout" icon="power" />
               </Dropdown.Menu>
             </Dropdown>
           </Menu.Item>
