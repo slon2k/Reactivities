@@ -22,11 +22,24 @@ export default class UserStore {
       const user = await api.User.login(credentials);
       runInAction("Login", () => (this.user = user));
       this.rootStore.commonStore.setToken(user.token);
+      this.rootStore.modalStore.closeModal();
       history.push("/activities");
     } catch (error) {
       throw error;
     }
   };
+
+  @action register = async (values: IUserForm) => {
+    try {
+      const user = await api.User.register(values);
+      runInAction(() => (this.user = user));
+      this.rootStore.commonStore.setToken(user.token);
+      this.rootStore.modalStore.closeModal();
+      history.push("/activities");      
+    } catch (error) {
+      throw error;     
+    }
+  }
 
   @action getUser = async () => {
     try {

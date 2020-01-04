@@ -13,6 +13,7 @@ import DetailsPage from "../../pages/DetailsPage";
 import NotFound from "../../pages/NotFound";
 import { ToastContainer } from "react-toastify";
 import LoginForm from "../login-form/LoginForm";
+import ModalContainer from "../modals/ModalContainer";
 
 const App = () => {
   const Store = useContext(StoreContext);
@@ -33,6 +34,7 @@ const App = () => {
 
   return (
     <Fragment>
+      <ModalContainer />
       <ToastContainer position="bottom-right" />
       <Route exact path="/" component={HomePage} />
       <Route
