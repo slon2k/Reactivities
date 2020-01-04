@@ -4,12 +4,13 @@ import { ActivityListItem } from "./activity-list-item/ActivityListItem";
 import { StoreContext } from "../../store";
 import { observer } from "mobx-react-lite";
 import { IActivity } from "../../models/activity";
+import { format } from "date-fns";
 
 const Group = (activities: IActivity[], group: string) => {
   return (
     <Fragment key={group}>
       <Label size="large" color="blue">
-        {group}
+        {format(group, 'eeee do MMMM')}
       </Label>
       <ItemGroup divided>
         {activities.map(item => (
@@ -21,7 +22,6 @@ const Group = (activities: IActivity[], group: string) => {
 };
 
 const ActivityList: React.FC = () => {
-
   const Store = useContext(StoreContext);
   const { activitiesByDate } = Store.activityStore;
 
