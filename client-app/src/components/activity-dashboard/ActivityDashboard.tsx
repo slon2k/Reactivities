@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Grid } from "semantic-ui-react";
 import ActivityList from "../activity-list/ActivityList";
+import { StoreContext } from "../../store";
+import { observer } from "mobx-react-lite";
+import Loading from "../loading/Loading";
 
 const ActivityDashboard: React.FC = () => {
+  const Store = useContext(StoreContext);
+  const { loadActivities, loading } = Store.activityStore;
+  useEffect(() => {
+    loadActivities();
+  }, [loadActivities]);
+
+  if (loading) {
+    return <Loading content="Loading activities ..." />;
+  }
 
   return (
     <Grid>
@@ -16,4 +28,4 @@ const ActivityDashboard: React.FC = () => {
   );
 };
 
-export default ActivityDashboard;
+export default observer(ActivityDashboard);

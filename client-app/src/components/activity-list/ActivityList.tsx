@@ -21,7 +21,7 @@ const Group = (activities: IActivity[], group: string) => {
 };
 
 const ActivityList: React.FC = () => {
-  
+
   const Store = useContext(StoreContext);
   const { activitiesByDate } = Store.activityStore;
 

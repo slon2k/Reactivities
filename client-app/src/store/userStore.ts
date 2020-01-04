@@ -23,7 +23,6 @@ export default class UserStore {
       runInAction("Login", () => (this.user = user));
       this.rootStore.commonStore.setToken(user.token);
       history.push("/activities");
-      console.log(user);
     } catch (error) {
       throw error;
     }

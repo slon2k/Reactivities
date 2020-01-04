@@ -16,7 +16,6 @@ import LoginForm from "../login-form/LoginForm";
 
 const App = () => {
   const Store = useContext(StoreContext);
-  const { loadActivities, loading } = Store.activityStore;
   const { setApploaded, token, appLoaded } = Store.commonStore;
   const { getUser } = Store.userStore;
 
@@ -28,16 +27,8 @@ const App = () => {
     }
   }, [getUser, setApploaded, token]);
 
-  useEffect(() => {
-    loadActivities();
-  }, [loadActivities]);
-
   if (!appLoaded) {
     return <Loading content="Loading application ..." />;
-  }
-
-  if (loading) {
-    return <Loading content="Loading activities ..." />;
   }
 
   return (
