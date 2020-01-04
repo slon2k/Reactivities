@@ -1,12 +1,13 @@
 import React, { useContext } from "react";
-import { Menu, Container, Button } from "semantic-ui-react";
+import { Menu, Container, Button, Image, Dropdown } from "semantic-ui-react";
 import { StoreContext } from "../../store";
 import { observer } from "mobx-react-lite";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 const NavBar: React.FC = () => {
   const Store = useContext(StoreContext);
-  const { clearSelectedActivity} = Store.activityStore;
+  const { clearSelectedActivity } = Store.activityStore;
+  const { user, isLoggedIn } = Store.userStore;
 
   return (
     <Menu inverted fixed="top">
@@ -27,6 +28,26 @@ const NavBar: React.FC = () => {
             content="Create Activity"
           />
         </Menu.Item>
+        {user && (
+          <Menu.Item position="right">
+            <Image avatar spaced="right" src={"/assets/user.png"} />
+            <Dropdown pointing="top left" text="user">
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  as={Link}
+                  to={`/profile/username`}
+                  text="My profile"
+                  icon="user"
+                />
+                <Dropdown.Item
+                  onClick={() => console.log("Logout")}
+                  text="Logout"
+                  icon="power"
+                />
+              </Dropdown.Menu>
+            </Dropdown>
+          </Menu.Item>
+        )}
       </Container>
     </Menu>
   );

@@ -1,24 +1,45 @@
-import React from "react";
+import React, { useContext, Fragment } from "react";
 import { Container, Segment, Header, Button, Image } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import { StoreContext } from "../store";
 
 const HomePage = () => {
+  const Store = useContext(StoreContext);
+  const { isLoggedIn, user } = Store.userStore;
   return (
-    <Segment inverted textAlign='center' vertical className='masthead'>
+    <Segment inverted textAlign="center" vertical className="masthead">
       <Container text>
-        <Header as='h1' inverted>
+        <Header as="h1" inverted>
           <Image
-            size='massive'
-            src='/assets/logo.png'
-            alt='logo'
+            size="massive"
+            src="/assets/logo.png"
+            alt="logo"
             style={{ marginBottom: 12 }}
           />
           Reactivities
         </Header>
-        <Header as='h2' inverted content='Welcome to Reactivities' />
-        <Button as={Link} to='/login' size='huge' inverted>
-          Login
-        </Button>
+        {isLoggedIn && user ? (
+          <Fragment>
+            <Header
+              as="h2"
+              inverted
+              content={`Welcome back ${user.displayName}`}
+            />
+            <Button as={Link} to="/activities" size="huge" inverted>
+              Go to activities
+            </Button>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Header as="h2" inverted content="Welcome to Reactivities" />
+            <Button as={Link} to="/login" size="huge" inverted>
+              Login
+            </Button>            
+            <Button as={Link} to="/register" size="huge" inverted>
+              Register
+            </Button>
+          </Fragment>
+        )}
       </Container>
     </Segment>
   );
