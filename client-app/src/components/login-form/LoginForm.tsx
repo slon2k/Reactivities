@@ -21,13 +21,13 @@ const LoginForm = () => {
         [FORM_ERROR]: error
       }))}
       validate={validate}
-      render={({ handleSubmit, submitting, form, submitError, invalid, pristine, dirtySinceLastSubmit }) => (
+      render={({ handleSubmit, submitting, submitError, invalid, pristine, dirtySinceLastSubmit }) => (
         <Form onSubmit={handleSubmit}>
           <Field name="email" component={TextInput} type="email" placeholder="Email" />
           <Field name="password" component={TextInput} type="password" placeholder="Password" />
           {submitError && !dirtySinceLastSubmit && <Label color="red" basic content={submitError.statusText} />}
           <br />
-          <Button disabled={invalid && !dirtySinceLastSubmit || pristine} positive loading={submitting} content="Login" />
+          <Button disabled={(invalid && !dirtySinceLastSubmit) || pristine} positive loading={submitting} content="Login" />
         </Form>
       )}
     />

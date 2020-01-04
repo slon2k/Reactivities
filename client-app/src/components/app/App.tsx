@@ -15,13 +15,26 @@ import { ToastContainer } from "react-toastify";
 import LoginForm from "../login-form/LoginForm";
 
 const App = () => {
-
   const Store = useContext(StoreContext);
   const { loadActivities, loading } = Store.activityStore;
+  const { setApploaded, token, appLoaded } = Store.commonStore;
+  const { getUser } = Store.userStore;
+
+  useEffect(() => {
+    if (token) {
+      getUser().finally(() => setApploaded());
+    } else {
+      setApploaded()
+    }
+  }, [getUser, setApploaded, token]);
 
   useEffect(() => {
     loadActivities();
   }, [loadActivities]);
+
+  if (!appLoaded) {
+    return <Loading content="Loading application ..." />;
+  }
 
   if (loading) {
     return <Loading content="Loading activities ..." />;
@@ -29,7 +42,7 @@ const App = () => {
 
   return (
     <Fragment>
-      <ToastContainer position='bottom-right' />
+      <ToastContainer position="bottom-right" />
       <Route exact path="/" component={HomePage} />
       <Route
         path={"/(.+)"}
@@ -38,14 +51,14 @@ const App = () => {
             <Fragment>
               <NavBar />
               <Container style={{ paddingTop: "7em" }}>
-              <Switch>
-                <Route exact path="/activities" component={ActivitiesPage} />
-                <Route path="/activities/:id" component={DetailsPage} />
-                <Route path="/create" component={CreatePage} />
-                <Route path="/edit/:id" component={EditPage} />
-                <Route path="/login" component={LoginForm} />
-                <Route component={NotFound} />                
-              </Switch>  
+                <Switch>
+                  <Route exact path="/activities" component={ActivitiesPage} />
+                  <Route path="/activities/:id" component={DetailsPage} />
+                  <Route path="/create" component={CreatePage} />
+                  <Route path="/edit/:id" component={EditPage} />
+                  <Route path="/login" component={LoginForm} />
+                  <Route component={NotFound} />
+                </Switch>
               </Container>
             </Fragment>
           );

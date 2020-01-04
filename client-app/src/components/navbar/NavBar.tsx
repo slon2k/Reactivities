@@ -7,7 +7,7 @@ import { NavLink, Link } from "react-router-dom";
 const NavBar: React.FC = () => {
   const Store = useContext(StoreContext);
   const { clearSelectedActivity } = Store.activityStore;
-  const { user, isLoggedIn, logout } = Store.userStore;
+  const { user, logout } = Store.userStore;
 
   return (
     <Menu inverted fixed="top">
