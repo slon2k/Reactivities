@@ -55,7 +55,7 @@ namespace API
             
             services.AddMediatR(typeof(List.Handler).Assembly);
             
-            services.AddAutoMapper(typeof(List.Handler));
+            services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>(), typeof(Startup));
 
             services.AddControllers(opt => {
                 var policy = new AuthorizationPolicyBuilder()

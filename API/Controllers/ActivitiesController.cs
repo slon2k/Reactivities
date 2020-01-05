@@ -21,7 +21,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Activity>>> Get()
+        public async Task<ActionResult<IEnumerable<ActivityDto>>> Get()
         {
             return await _mediator.Send(new List.Query());
         }
