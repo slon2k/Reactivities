@@ -159,26 +159,55 @@ export default class ActivityStore {
 
   @action attendActivity = async () => {
     const attendee = this.createAttendee(this.rootStore.userStore.user!);
-    if (this.selectedActivity) {
-      this.selectedActivity.attendees.push(attendee);
-      this.selectedActivity.isGoing = true;
-      this.activityRegistry.set(
-        this.selectedActivity.id,
-        this.selectedActivity
-      );
+    this.loading = true;
+    try {
+      if (this.selectedActivity) {
+        await api.Activities.attend(this.selectedActivity.id);
+        runInAction(() => {
+          if (this.selectedActivity) {
+            this.selectedActivity.attendees.push(attendee);
+            this.selectedActivity.isGoing = true;
+            this.activityRegistry.set(
+              this.selectedActivity.id,
+              this.selectedActivity
+            );
+          }
+          this.loading = false;
+        });
+      }
+    } catch (error) {
+      runInAction(() => {
+        toast.error("Unable to update activity");
+        this.loading = false;
+      });
     }
   };
 
-  @action cancelAttendance = () => {
-    if (this.selectedActivity) {
-      this.selectedActivity.attendees = this.selectedActivity.attendees.filter(
-        a => a.userName !== this.rootStore.userStore.user!.userName
-      );
-      this.selectedActivity.isGoing = false;
-      this.activityRegistry.set(
-        this.selectedActivity.id,
-        this.selectedActivity
-      );
+  @action cancelAttendance = async () => {
+    this.loading = true;
+    try {
+      if (this.selectedActivity) {
+        await api.Activities.unattend(this.selectedActivity.id);
+      }
+      runInAction(() => {
+        if (this.selectedActivity) {
+          this.selectedActivity.attendees = this.selectedActivity.attendees.filter(
+            a => a.userName !== this.rootStore.userStore.user!.userName
+          );
+          this.selectedActivity.isGoing = false;
+          this.activityRegistry.set(
+            this.selectedActivity.id,
+            this.selectedActivity
+          );
+        }
+        this.loading = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => {
+        toast.error("Unable to update activity");
+        this.loading = false;
+      });
     }
   };
 

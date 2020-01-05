@@ -62,7 +62,7 @@ const request = {
       .then(responseBody),
   delete: (url: string) =>
     axios
-      .get(url)
+      .delete(url)
       .then(sleep(750))
       .then(responseBody)
 };
@@ -73,7 +73,9 @@ export const Activities = {
   create: (activity: IActivity) => request.post(`/activities`, activity),
   update: (activity: IActivity) =>
     request.put(`/activities/${activity.id}`, activity),
-  delete: (id: string) => request.get(`/activities/${id}`)
+  delete: (id: string) => request.get(`/activities/${id}`),
+  attend: (id: string) => request.post(`/activities/${id}/attend`, {}),
+  unattend: (id: string) => request.delete(`/activities/${id}/attend`)
 };
 
 export const User = {
