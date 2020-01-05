@@ -14,6 +14,7 @@ import {
   hasLengthGreaterThan
 } from "revalidate";
 import { StoreContext } from "../../store";
+import { IAttendee } from "../../models/attendee";
 
 interface IProps {
   activity?: IActivity;
@@ -34,6 +35,13 @@ const validate = combineValidators({
 const ActivityForm: React.FC<IProps> = ({ activity }) => {
   const Store = useContext(StoreContext);
   const { createActivity, updateActivity, submitting } = Store.activityStore;
+  const { user } = Store.userStore;
+  const attendee: IAttendee = {
+    isHost: true,
+    userName: user ? user.userName : "",
+    displayName: user ? user.displayName : "",
+    image: ""
+  }
 
   const initialActivity: IActivity = {
     id: "",
@@ -43,7 +51,9 @@ const ActivityForm: React.FC<IProps> = ({ activity }) => {
     venue: "",
     category: "",
     city: "",
-    attendees: []
+    attendees: user ? [attendee] : [],
+    isHost: true,
+    isGoing: true
   };
 
   const form = activity || initialActivity;

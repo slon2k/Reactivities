@@ -1,5 +1,5 @@
 export interface IUser {
-    username: string,
+    userName: string,
     displayName: string,
     token: string,
     image?: string
@@ -8,6 +8,6 @@ export interface IUser {
 export interface IUserForm {   
     email: string,
     password: string,
-    username?: string,
+    userName?: string,
     displayName?: string
 }

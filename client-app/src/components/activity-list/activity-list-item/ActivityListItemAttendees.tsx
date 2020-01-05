@@ -5,7 +5,6 @@ import { IAttendee } from "../../../models/attendee";
 const ActivityListItemAttendees: React.FC<{ attendees: IAttendee[] }> = ({
   attendees
 }) => {
-  console.log(attendees);
   return (
     <List horizontal>
       {attendees.map(item => (

@@ -40,12 +40,19 @@ export default class ActivityStore {
   }
 
   @action loadActivities = async () => {
+    const user = this.rootStore.userStore.user!;
     this.loading = true;
     try {
       const response = await api.Activities.list();
       runInAction("loading", () => {
         response.forEach(item => {
           item.date = new Date(item.date!);
+          item.isGoing = item.attendees.some(
+            a => a.userName === user.userName
+          );
+          item.isHost = item.attendees.some(
+            a => a.userName === user.userName && a.isHost
+          )
           this.activityRegistry.set(item.id, item);
         });
         this.loading = false;

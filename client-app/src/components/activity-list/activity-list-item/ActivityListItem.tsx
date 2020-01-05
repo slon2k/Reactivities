@@ -1,5 +1,5 @@
 import React from "react";
-import { Item, Button, Segment, Icon } from "semantic-ui-react";
+import { Item, Button, Segment, Icon, Label } from "semantic-ui-react";
 import { IActivity } from "../../../models/activity";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
@@ -19,6 +19,24 @@ export const ActivityListItem: React.FC<IProps> = ({ activity }) => {
             <Item.Content>
               <Item.Header as="a">{activity.title}</Item.Header>
               <Item.Description>Hosted by Bob</Item.Description>
+              {activity.isHost && (
+              <Item.Description>
+                <Label
+                  basic
+                  color="orange"
+                  content="You are hosting this activity"
+                />
+              </Item.Description>                
+              )}
+              {activity.isGoing && !activity.isHost && (
+              <Item.Description>
+                <Label
+                  basic
+                  color="green"
+                  content="You are going to this activity"
+                />
+              </Item.Description>                
+              )}
             </Item.Content>
           </Item>
         </Item.Group>
@@ -30,7 +48,10 @@ export const ActivityListItem: React.FC<IProps> = ({ activity }) => {
         {activity.venue}, {activity.city}
       </Segment>
       <Segment secondary>
-        <ActivityListItemAttendees attendees={activity.attendees} key={activity.id}/>
+        <ActivityListItemAttendees
+          attendees={activity.attendees}
+          key={activity.id}
+        />
       </Segment>
       <Segment clearing>
         <span>{activity.description}</span>
