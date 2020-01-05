@@ -4,6 +4,8 @@ import { api } from "../services";
 import { history } from "../";
 import { toast } from "react-toastify";
 import { RootStore } from "./rootStore";
+import { IAttendee } from "../models/attendee";
+import { IUser } from "../models/user";
 
 export default class ActivityStore {
   rootStore: RootStore;
@@ -47,12 +49,10 @@ export default class ActivityStore {
       runInAction("loading", () => {
         response.forEach(item => {
           item.date = new Date(item.date!);
-          item.isGoing = item.attendees.some(
-            a => a.userName === user.userName
-          );
+          item.isGoing = item.attendees.some(a => a.userName === user.userName);
           item.isHost = item.attendees.some(
             a => a.userName === user.userName && a.isHost
-          )
+          );
           this.activityRegistry.set(item.id, item);
         });
         this.loading = false;
@@ -155,5 +155,39 @@ export default class ActivityStore {
         this.deleting.delete(id);
       });
     }
+  };
+
+  @action attendActivity = async () => {
+    const attendee = this.createAttendee(this.rootStore.userStore.user!);
+    if (this.selectedActivity) {
+      this.selectedActivity.attendees.push(attendee);
+      this.selectedActivity.isGoing = true;
+      this.activityRegistry.set(
+        this.selectedActivity.id,
+        this.selectedActivity
+      );
+    }
+  };
+
+  @action cancelAttendance = () => {
+    if (this.selectedActivity) {
+      this.selectedActivity.attendees = this.selectedActivity.attendees.filter(
+        a => a.userName !== this.rootStore.userStore.user!.userName
+      );
+      this.selectedActivity.isGoing = false;
+      this.activityRegistry.set(
+        this.selectedActivity.id,
+        this.selectedActivity
+      );
+    }
+  };
+
+  createAttendee = (user: IUser): IAttendee => {
+    return {
+      displayName: user.displayName,
+      isHost: false,
+      image: user.image || "",
+      userName: user.userName
+    };
   };
 }
