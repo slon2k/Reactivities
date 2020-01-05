@@ -20,7 +20,7 @@ const ActivityDetails: React.FC<IProps> = ({ activity }) => {
         <ActivityDetailsChat />
       </Grid.Column>
       <Grid.Column width={6}>
-        <ActivityDetailsSidebar />
+        <ActivityDetailsSidebar attendees={activity.attendees}/>
       </Grid.Column>
     </Grid>
   );

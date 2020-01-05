@@ -42,7 +42,8 @@ const ActivityForm: React.FC<IProps> = ({ activity }) => {
     date: null,
     venue: "",
     category: "",
-    city: ""
+    city: "",
+    attendees: []
   };
 
   const form = activity || initialActivity;
