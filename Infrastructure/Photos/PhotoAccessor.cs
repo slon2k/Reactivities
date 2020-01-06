@@ -25,12 +25,12 @@ namespace Application.Photos
         public PhotoUploadResult AddPhoto(IFormFile file)
         {
             var uploadResult = new ImageUploadResult();
-            
+
             if (file.Length > 0)
             {
-                using(var stream = file.OpenReadStream())
+                using (var stream = file.OpenReadStream())
                 {
-                    uploadResult = _cloudinary.Upload(new ImageUploadParams 
+                    uploadResult = _cloudinary.Upload(new ImageUploadParams
                     {
                         File = new FileDescription(file.FileName, stream),
                         Transformation = new Transformation()
@@ -56,7 +56,8 @@ namespace Application.Photos
 
         public string DeletePhoto(string publicId)
         {
-            throw new System.NotImplementedException();
+            var result = _cloudinary.Destroy(new DeletionParams(publicId));
+            return result.Result == "ok" ? result.Result : null;
         }
     }
 }
