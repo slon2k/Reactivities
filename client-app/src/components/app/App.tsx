@@ -14,6 +14,7 @@ import NotFound from "../../pages/NotFound";
 import { ToastContainer } from "react-toastify";
 import LoginForm from "../login-form/LoginForm";
 import ModalContainer from "../modals/ModalContainer";
+import ProfilePage from "../../pages/ProfilePage";
 
 const App = () => {
   const Store = useContext(StoreContext);
@@ -49,7 +50,7 @@ const App = () => {
                   <Route path="/activities/:id" component={DetailsPage} />
                   <Route path="/create" component={CreatePage} />
                   <Route path="/edit/:id" component={EditPage} />
-                  <Route path="/login" component={LoginForm} />
+                  <Route path="/profile/:username" component={ProfilePage} />
                   <Route component={NotFound} />
                 </Switch>
               </Container>
