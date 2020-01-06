@@ -1,3 +1,4 @@
+using System;
 using Application.Interfaces;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
@@ -34,6 +35,11 @@ namespace Application.Photos
                         File = new FileDescription(file.FileName, stream)
                     });
                 }
+            }
+
+            if (uploadResult.Error != null)
+            {
+                throw new Exception(uploadResult.Error.Message);
             }
 
             return new PhotoUploadResult
