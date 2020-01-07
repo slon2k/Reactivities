@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain
@@ -9,5 +10,9 @@ namespace Domain
         public string Bio { get; set; }
         public virtual ICollection<UserActivity> UserActivities { get; set; }
         public virtual ICollection<Photo> Photos { get; set; }
+        public Photo Image 
+        { 
+            get => this.Photos.FirstOrDefault(x => x.IsMain);
+        }
     }
 }
