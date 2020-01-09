@@ -1,21 +1,50 @@
-import React, { useContext } from "react";
-import { Tab, Header, Card, Image } from "semantic-ui-react";
+import React, { useContext, useState } from "react";
+import { Tab, Header, Card, Image, Button, Grid } from "semantic-ui-react";
 import { StoreContext } from "../../../store";
 import { observer } from "mobx-react-lite";
+import PhotoUpload from "../../photo-upload/PhotoUpload"
 
 const ProfilePhotos = () => {
   const Store = useContext(StoreContext);
-  const { profile } = Store.profileStore;
+  const { profile, isCurrentUser } = Store.profileStore;
+
+  const [addPhotoMode, setAddPhotoMode] = useState(false);
+
   return (
     <Tab.Pane>
-      <Header icon="image" content="photos" />
-      <Card.Group itemsPerRow={5}>
-        {profile && profile.photos.map((photo) => (
-          <Card key={photo.id}>
-            <Image src={photo.url}/>
-          </Card>
-        ))}
-      </Card.Group>
+      <Grid>
+        <Grid.Column width={16} style={{ paddingBottom: 0 }}>
+          <Header icon="image" content="photos" floated="left" />
+          {isCurrentUser && (
+            <Button
+              floated="right"
+              basic
+              content={addPhotoMode ? "Cancel" : "Add Photo"}
+              onClick={() => setAddPhotoMode(!addPhotoMode)}
+            />
+          )}
+        </Grid.Column>
+        <Grid.Column width={16}>
+          {addPhotoMode ? (
+            <PhotoUpload />
+          ) : (
+            <Card.Group itemsPerRow={5}>
+              {profile &&
+                profile.photos.map(photo => (
+                  <Card key={photo.id}>
+                    <Image src={photo.url} />
+                    {isCurrentUser && (
+                      <Button.Group fluid widths={2}>
+                        <Button basic positive content="Main" />
+                        <Button basic negative icon="trash" />
+                      </Button.Group>
+                    )}
+                  </Card>
+                ))}
+            </Card.Group>
+          )}
+        </Grid.Column>
+      </Grid>
     </Tab.Pane>
   );
 };

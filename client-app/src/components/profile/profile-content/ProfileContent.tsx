@@ -14,7 +14,7 @@ const ProfileContent = () => {
   return (
     <Tab
       menuPosition="right"
-      menu={{ fliud: true, vertical: true }}
+      menu={{ vertical: true }}
       panes={panes}
     />
   );
