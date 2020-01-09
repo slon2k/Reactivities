@@ -1,12 +1,10 @@
 import ActivityStore from "./activityStore";
 import UserStore from "./userStore";
 import { createContext } from "react";
-import { configure, observable, action, runInAction } from "mobx";
+import { configure } from "mobx";
 import CommonStore from "./commonStore";
 import ModalStore from "./modalStore";
 import ProfileStore from "./profileStore";
-import { IProfile } from "../models/profile";
-import { api } from "../services";
 
 configure({ enforceActions: "always" });
 
