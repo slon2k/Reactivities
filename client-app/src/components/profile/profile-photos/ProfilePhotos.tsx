@@ -12,7 +12,9 @@ const ProfilePhotos = () => {
     uploadPhoto,
     uploadingPhoto,
     setMainPhoto,
-    updatingMainPhoto
+    updatingPhoto,
+    deletePhoto,
+    deletingPhoto
   } = Store.profileStore;
   const [addPhotoMode, setAddPhotoMode] = useState(false);
 
@@ -54,13 +56,19 @@ const ProfilePhotos = () => {
                           content="Main"
                           disabled={
                             photo.isMain ||
-                            (updatingMainPhoto !== "" &&
-                              updatingMainPhoto !== photo.id)
+                            (updatingPhoto !== "" && updatingPhoto !== photo.id)
                           }
-                          loading={updatingMainPhoto === photo.id}
+                          loading={updatingPhoto === photo.id}
                           onClick={() => setMainPhoto(photo)}
                         />
-                        <Button basic negative icon="trash" />
+                        <Button
+                          basic
+                          negative
+                          icon="trash"
+                          loading={deletingPhoto === photo.id} 
+                          disabled={photo.isMain}
+                          onClick={() => deletePhoto(photo)}
+                        />
                       </Button.Group>
                     )}
                   </Card>

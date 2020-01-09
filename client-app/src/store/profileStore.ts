@@ -15,8 +15,8 @@ export default class ProfileStore {
   @observable profile: IProfile | null = null;
   @observable loadingProfile: boolean = false;
   @observable uploadingPhoto: boolean = false;
-  @observable updatingMainPhoto: string = '';
-
+  @observable updatingPhoto: string = "";
+  @observable deletingPhoto: string = "";
 
   @computed get isCurrentUser() {
     if (this.rootStore.userStore.user && this.profile) {
@@ -66,7 +66,7 @@ export default class ProfileStore {
   };
 
   @action setMainPhoto = async (photo: IPhoto) => {
-    this.updatingMainPhoto = photo.id;
+    this.updatingPhoto = photo.id;
     try {
       await api.Profile.setMainPhoto(photo.id);
       runInAction(() => {
@@ -84,13 +84,34 @@ export default class ProfileStore {
             newMain.isMain = true;
           }
         }
-        this.updatingMainPhoto = "";
+        this.updatingPhoto = "";
       });
     } catch (error) {
       console.log(error);
       toast.error("Problem updating photo");
       runInAction(() => {
-        this.updatingMainPhoto = "";
+        this.updatingPhoto = "";
+      });
+    }
+  };
+
+  @action deletePhoto = async (photo: IPhoto) => {
+    this.deletingPhoto = photo.id;
+    try {
+      await api.Profile.deletePhoto(photo.id);
+      runInAction(() => {
+        if (this.profile) {
+          this.profile.photos = this.profile.photos.filter(
+            x => x.id !== photo.id
+          );
+        }
+        this.deletingPhoto = "";
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Problem deleting photo");
+      runInAction(() => {
+        this.deletingPhoto = "";
       });
     }
   };
