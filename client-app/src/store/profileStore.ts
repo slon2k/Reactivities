@@ -3,6 +3,7 @@ import { observable, action, runInAction, computed } from "mobx";
 import { IProfile } from "../models/profile";
 import { api } from "../services";
 import { toast } from "react-toastify";
+import { IPhoto } from "../models/photo";
 
 export default class ProfileStore {
   rootStore: RootStore;
@@ -14,6 +15,8 @@ export default class ProfileStore {
   @observable profile: IProfile | null = null;
   @observable loadingProfile: boolean = false;
   @observable uploadingPhoto: boolean = false;
+  @observable updatingMainPhoto: string = '';
+
 
   @computed get isCurrentUser() {
     if (this.rootStore.userStore.user && this.profile) {
@@ -58,6 +61,36 @@ export default class ProfileStore {
       toast.error("Problem uploading photo");
       runInAction(() => {
         this.uploadingPhoto = false;
+      });
+    }
+  };
+
+  @action setMainPhoto = async (photo: IPhoto) => {
+    this.updatingMainPhoto = photo.id;
+    try {
+      await api.Profile.setMainPhoto(photo.id);
+      runInAction(() => {
+        if (this.rootStore.userStore.user) {
+          this.rootStore.userStore.user.image = photo.url;
+        }
+        if (this.profile) {
+          this.profile.image = photo.url;
+          const currentMain = this.profile.photos.find(x => x.isMain);
+          const newMain = this.profile.photos.find(x => x.id === photo.id);
+          if (currentMain) {
+            currentMain.isMain = false;
+          }
+          if (newMain) {
+            newMain.isMain = true;
+          }
+        }
+        this.updatingMainPhoto = "";
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Problem updating photo");
+      runInAction(() => {
+        this.updatingMainPhoto = "";
       });
     }
   };
