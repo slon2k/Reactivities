@@ -6,9 +6,12 @@ import PhotoUpload from "../../photo-upload/PhotoUpload"
 
 const ProfilePhotos = () => {
   const Store = useContext(StoreContext);
-  const { profile, isCurrentUser } = Store.profileStore;
-
+  const { profile, isCurrentUser, uploadPhoto, uploadingPhoto } = Store.profileStore;
   const [addPhotoMode, setAddPhotoMode] = useState(false);
+
+  const handleUploadImage = (photo: Blob) => {
+    uploadPhoto(photo).then(() => setAddPhotoMode(false));
+  }
 
   return (
     <Tab.Pane>
@@ -26,7 +29,7 @@ const ProfilePhotos = () => {
         </Grid.Column>
         <Grid.Column width={16}>
           {addPhotoMode ? (
-            <PhotoUpload />
+            <PhotoUpload uploadPhoto={handleUploadImage} loading={uploadingPhoto}/>
           ) : (
             <Card.Group itemsPerRow={5}>
               {profile &&

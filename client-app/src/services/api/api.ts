@@ -1,21 +1,25 @@
 import axios, { AxiosResponse } from "axios";
 import { IActivity } from "../../models/activity";
-import { IUser, IUserForm } from "../../models/user"
+import { IUser, IUserForm } from "../../models/user";
 import { history } from "../..";
 import { toast } from "react-toastify";
 import { IProfile } from "../../models/profile";
+import { IPhoto } from "../../models/photo";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
-axios.interceptors.request.use((config) => {
-  const token = window.localStorage.getItem('jwt');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+axios.interceptors.request.use(
+  config => {
+    const token = window.localStorage.getItem("jwt");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
   }
-  return config;
-}, error => {
-  return Promise.reject(error);
-});
+);
 
 axios.interceptors.response.use(undefined, error => {
   if (error.message === "Network Error" && !error.response) {
@@ -65,7 +69,17 @@ const request = {
     axios
       .delete(url)
       .then(sleep(750))
-      .then(responseBody)
+      .then(responseBody),
+  postForm: (url: string, file: Blob) => {
+    let formData = new FormData();
+    formData.append("File", file);
+    return axios
+      .post(url, formData, {
+        headers: { "Content-type": "multipart/form-data" }
+      })
+      .then(sleep(750))
+      .then(responseBody);
+  }
 };
 
 export const Activities = {
@@ -81,10 +95,13 @@ export const Activities = {
 
 export const User = {
   login: (user: IUserForm): Promise<IUser> => request.post("user/login", user),
-  register: (user: IUserForm): Promise<IUser> => request.post("user/register", user),
+  register: (user: IUserForm): Promise<IUser> =>
+    request.post("user/register", user),
   current: (): Promise<IUser> => request.get("/user")
-}
+};
 
 export const Profile = {
-  get: (username: string): Promise<IProfile> => request.get(`/profiles/${username}`)
-}
+  get: (username: string): Promise<IProfile> =>
+    request.get(`/profiles/${username}`),
+  uploadPhoto: (photo: Blob): Promise<IPhoto> => request.postForm(`/photos`, photo)
+};
