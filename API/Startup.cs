@@ -59,8 +59,9 @@ namespace API
                         .AllowCredentials()));
 
             services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddAutoMapper(typeof(List.Handler));
             services.AddSignalR();
-            services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>(), typeof(Startup));
+            //services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>(), typeof(Startup));
 
             services.AddControllers(opt =>
             {
