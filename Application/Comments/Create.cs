@@ -60,7 +60,7 @@ namespace Application.Comments
                     Activity = activity,
                     Body = request.Body,
                     CreatedAt = DateTime.Now
-                }
+                };
 
                 activity.Comments.Add(comment);
 

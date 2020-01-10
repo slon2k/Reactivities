@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using AutoMapper;
 using Infrastructure.Photos;
 using Application.Photos;
+using API.SignalR;
 
 namespace API
 {
@@ -48,19 +49,20 @@ namespace API
                 opt.UseLazyLoadingProxies();
                 opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
-            
+
             services.AddCors(
                 option => option.AddPolicy("CorsPolicy",
                     policy => policy
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .WithOrigins("http://localhost:3000")));
-            
+
             services.AddMediatR(typeof(List.Handler).Assembly);
-            
+            services.AddSignalR();
             services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>(), typeof(Startup));
 
-            services.AddControllers(opt => {
+            services.AddControllers(opt =>
+            {
                 var policy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .Build();
@@ -76,8 +78,9 @@ namespace API
             identityBuilder.AddEntityFrameworkStores<DataContext>();
             identityBuilder.AddSignInManager<SignInManager<AppUser>>();
 
-            services.AddAuthorization(opt => {
-                opt.AddPolicy("IsActivityHost", policy => 
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("IsActivityHost", policy =>
                 {
                     policy.Requirements.Add(new IsHostRequirement());
                 });
@@ -94,6 +97,19 @@ namespace API
                         IssuerSigningKey = key,
                         ValidateAudience = false,
                         ValidateIssuer = false
+                    };
+                    o.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 
@@ -124,6 +140,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
         }
     }
