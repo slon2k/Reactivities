@@ -55,7 +55,8 @@ namespace API
                     policy => policy
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .WithOrigins("http://localhost:3000")));
+                        .WithOrigins("http://localhost:3000")
+                        .AllowCredentials()));
 
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddSignalR();

@@ -6,6 +6,11 @@ import { toast } from "react-toastify";
 import { RootStore } from "./rootStore";
 import { IAttendee } from "../models/attendee";
 import { IUser } from "../models/user";
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  LogLevel
+} from "@microsoft/signalr";
 
 export default class ActivityStore {
   rootStore: RootStore;
@@ -19,6 +24,39 @@ export default class ActivityStore {
   @observable submitting = false;
   @observable selectedActivity: IActivity | null = null;
   @observable deleting = new Set<string>();
+  @observable.ref hubConnection: HubConnection | null = null;
+
+  @action createHubConnection = () => {
+    this.hubConnection = new HubConnectionBuilder()
+      .withUrl("http://localhost:5000/chat", {
+        accessTokenFactory: () => this.rootStore.commonStore.token!
+      })
+      .configureLogging(LogLevel.Information)
+      .build();
+
+    this.hubConnection
+      .start()
+      .then(() => console.log(this.hubConnection?.state))
+      .catch(error => console.log("Error establishing connection: ", error));
+
+    this.hubConnection.on("ReceiveComment", comment => this.selectedActivity?.comments.push(comment))
+  };
+
+  @action stopHubConnection = () => {
+    this.hubConnection?.stop();
+  }
+
+  @action addComent = async (values: any) => {
+    values.activityId = this.selectedActivity?.id;
+    try {
+      await this.hubConnection?.invoke("SendComment", values);
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+
+  }
 
   @computed get activitiesByDate() {
     const activities = Array.from<IActivity>(this.activityRegistry.values());

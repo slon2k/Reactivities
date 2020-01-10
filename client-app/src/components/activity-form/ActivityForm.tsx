@@ -53,7 +53,8 @@ const ActivityForm: React.FC<IProps> = ({ activity }) => {
     city: "",
     attendees: user ? [attendee] : [],
     isHost: true,
-    isGoing: true
+    isGoing: true,
+    comments: []
   };
 
   const form = activity || initialActivity;
