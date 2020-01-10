@@ -4,6 +4,7 @@ import { IProfile } from "../models/profile";
 import { api } from "../services";
 import { toast } from "react-toastify";
 import { IPhoto } from "../models/photo";
+import { IUpdateProfileForm } from "../models/updateProfileForm";
 
 export default class ProfileStore {
   rootStore: RootStore;
@@ -17,6 +18,7 @@ export default class ProfileStore {
   @observable uploadingPhoto: boolean = false;
   @observable updatingPhoto: string = "";
   @observable deletingPhoto: string = "";
+  @observable updatingProfile: boolean = false;
 
   @computed get isCurrentUser() {
     if (this.rootStore.userStore.user && this.profile) {
@@ -112,6 +114,29 @@ export default class ProfileStore {
       toast.error("Problem deleting photo");
       runInAction(() => {
         this.deletingPhoto = "";
+      });
+    }
+  };
+
+  @action updateProfile = async (updateProfileForm: IUpdateProfileForm) => {
+    this.updatingProfile = true;
+    try {
+      await api.Profile.updateProfile(updateProfileForm);
+      runInAction(() => {
+        if (this.profile) {
+          this.profile.displayName = updateProfileForm.displayName;
+          this.profile.bio = updateProfileForm.bio;
+        }
+        if (this.rootStore.userStore.user) {
+          this.rootStore.userStore.user.displayName = updateProfileForm.displayName;
+        }
+        this.updatingProfile = false;
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Problem updating profile");
+      runInAction(() => {
+        this.updatingProfile = false;
       });
     }
   };
