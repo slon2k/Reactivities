@@ -48,8 +48,8 @@ namespace Application.Profiles
                     throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
                 }
 
-                user.DisplayName = request.DisplayName;
-                user.Bio = request.Bio;
+                user.DisplayName = request.DisplayName ?? user.DisplayName;
+                user.Bio = request.Bio ?? user.Bio;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

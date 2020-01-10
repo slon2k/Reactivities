@@ -24,7 +24,6 @@ const ProfileUpdateForm: React.FC<IProps> = ({
   setEditMode
 }) => {
   const handleFormSubmit = (form: IUpdateProfileForm) => {
-    console.log("submitting ", form);
     updateProfile(form).then(() => setEditMode(false));
   };
 
