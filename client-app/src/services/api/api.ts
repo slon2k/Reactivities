@@ -109,5 +109,7 @@ export const Profile = {
   updateProfile: (updateProfileForm: IUpdateProfileForm) =>
     request.put(`/profiles`, updateProfileForm),
   setMainPhoto: (id: string) => request.post(`/photos/${id}/setmain`, {}),
-  deletePhoto: (id: string) => request.delete(`/photos/${id}`)
+  deletePhoto: (id: string) => request.delete(`/photos/${id}`),
+  follow: (username: string) => request.post(`/profiles/${username}/follow`, {}),
+  unfollow: (username: string) => request.delete(`/profiles/${username}/follow`)
 };

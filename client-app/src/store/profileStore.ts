@@ -19,6 +19,7 @@ export default class ProfileStore {
   @observable updatingPhoto: string = "";
   @observable deletingPhoto: string = "";
   @observable updatingProfile: boolean = false;
+  @observable updatingFollowing: boolean = false;
 
   @computed get isCurrentUser() {
     if (this.rootStore.userStore.user && this.profile) {
@@ -128,7 +129,8 @@ export default class ProfileStore {
           this.profile.bio = updateProfileForm.bio;
         }
         if (this.rootStore.userStore.user) {
-          this.rootStore.userStore.user.displayName = updateProfileForm.displayName;
+          this.rootStore.userStore.user.displayName =
+            updateProfileForm.displayName;
         }
         this.updatingProfile = false;
       });
@@ -137,6 +139,46 @@ export default class ProfileStore {
       toast.error("Problem updating profile");
       runInAction(() => {
         this.updatingProfile = false;
+      });
+    }
+  };
+
+  @action follow = async (username: string) => {
+    this.updatingFollowing = true;
+    try {
+      api.Profile.follow(username);
+      runInAction(() => {
+        if (this.profile) {
+          this.profile.following = true;
+          this.profile.followersCount++;
+        }
+        this.updatingFollowing = false;
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Problem updating following");
+      runInAction(() => {
+        this.updatingFollowing = false;
+      });
+    }
+  };
+
+  @action unfollow = async (username: string) => {
+    this.updatingFollowing = true;
+    try {
+      api.Profile.unfollow(username);
+      runInAction(() => {
+        if (this.profile) {
+          this.profile.following = false;
+          this.profile.followersCount--;
+        }
+        this.updatingFollowing = false;
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Problem updating following");
+      runInAction(() => {
+        this.updatingFollowing = false;
       });
     }
   };
