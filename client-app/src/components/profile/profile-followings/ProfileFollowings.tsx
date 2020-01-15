@@ -6,24 +6,32 @@ import ProfileCard from "../profile-card/ProfileCard";
 
 const ProfileFollowings = () => {
   const Store = useContext(StoreContext);
-  const { profile } = Store.profileStore;
+  const {
+    profile,
+    followings,
+    activeTab,
+    loadingFollowings
+  } = Store.profileStore;
+
   return (
-    <Tab.Pane>
+    <Tab.Pane loading={loadingFollowings}>
       <Grid>
         <Grid.Column width={16}>
-          <Header 
+          <Header
             floated="left"
             icon="user"
             content={
-              true 
-              ? "People following user"
-              : "People user is following"
+              activeTab === 3
+                ? `People following ${profile?.displayName}`
+                : `People ${profile?.displayName} is following`
             }
           />
         </Grid.Column>
         <Grid.Column width={16}>
           <Card.Group itemsPerRow={5}>
-            <ProfileCard />
+            {followings.map(profile => (
+              <ProfileCard key={profile.userName} profile={profile} />
+            ))}
           </Card.Group>
         </Grid.Column>
       </Grid>

@@ -21,7 +21,8 @@ const ProfilePage: React.FC<IProps> = ({ match }) => {
     follow,
     unfollow,
     updatingFollowing,
-    isCurrentUser
+    isCurrentUser,
+    setActiveTab
   } = Store.profileStore;
 
   useEffect(() => {
@@ -35,9 +36,16 @@ const ProfilePage: React.FC<IProps> = ({ match }) => {
   return (
     <Grid>
       <Grid.Column width={16}>
-        {profile && <ProfileHeader profile={profile} follow={follow} unfollow={unfollow} updatingFollowing={updatingFollowing}
-    isCurrentUser={isCurrentUser} />}
-        <ProfileContent />
+        {profile && (
+          <ProfileHeader
+            profile={profile}
+            follow={follow}
+            unfollow={unfollow}
+            updatingFollowing={updatingFollowing}
+            isCurrentUser={isCurrentUser}
+          />
+        )}
+        <ProfileContent setActiveTab={setActiveTab}/>
       </Grid.Column>
     </Grid>
   );

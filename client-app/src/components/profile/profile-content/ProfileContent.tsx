@@ -12,8 +12,19 @@ const panes = [
   { menuItem: "Following", render: () => <ProfileFollowings /> }
 ];
 
-const ProfileContent = () => {
-  return <Tab menuPosition="right" menu={{ vertical: true }} panes={panes} />;
+interface IProps {
+  setActiveTab: (index: any) => void;
+}
+
+const ProfileContent: React.FC<IProps> = ({ setActiveTab }) => {
+  return (
+    <Tab
+      menuPosition="right"
+      menu={{ vertical: true }}
+      panes={panes}
+      onTabChange={(e, data) => setActiveTab(data.activeIndex)}
+    />
+  );
 };
 
 export default ProfileContent;

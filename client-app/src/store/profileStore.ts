@@ -1,5 +1,5 @@
 import { RootStore } from "./rootStore";
-import { observable, action, runInAction, computed } from "mobx";
+import { observable, action, runInAction, computed, reaction } from "mobx";
 import { IProfile } from "../models/profile";
 import { api } from "../services";
 import { toast } from "react-toastify";
@@ -11,6 +11,18 @@ export default class ProfileStore {
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+
+    reaction(
+      () => this.activeTab,
+      activeTab => {
+        if (activeTab === 3 || activeTab === 4) {
+          const predicate = activeTab === 3 ? "followers" : "following";
+          this.loadFollowings(predicate);
+        } else {
+          this.followings = [];
+        }
+      }
+    );
   }
 
   @observable profile: IProfile | null = null;
@@ -20,6 +32,9 @@ export default class ProfileStore {
   @observable deletingPhoto: string = "";
   @observable updatingProfile: boolean = false;
   @observable updatingFollowing: boolean = false;
+  @observable loadingFollowings: boolean = false;
+  @observable followings: IProfile[] = [];
+  @observable activeTab: number = 0;
 
   @computed get isCurrentUser() {
     if (this.rootStore.userStore.user && this.profile) {
@@ -28,6 +43,8 @@ export default class ProfileStore {
       return false;
     }
   }
+
+  @action setActiveTab = (index: number) => (this.activeTab = index);
 
   @action loadProfile = async (username: string) => {
     this.loadingProfile = true;
@@ -179,6 +196,32 @@ export default class ProfileStore {
       toast.error("Problem updating following");
       runInAction(() => {
         this.updatingFollowing = false;
+      });
+    }
+  };
+
+  @action loadFollowings = async (predicate: string) => {
+    this.loadingFollowings = true;
+    try {
+      if (this.profile) {
+        const profiles = await api.Profile.listFollowings(
+          this.profile.userName,
+          predicate
+        );
+        runInAction(() => {
+          this.followings = profiles;
+        });
+      } else {
+        toast.error("user not defined");
+      }
+      runInAction(() => {
+        this.loadingFollowings = false;
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Problem loading followings");
+      runInAction(() => {
+        this.loadingFollowings = false;
       });
     }
   };

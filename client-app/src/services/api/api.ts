@@ -110,6 +110,10 @@ export const Profile = {
     request.put(`/profiles`, updateProfileForm),
   setMainPhoto: (id: string) => request.post(`/photos/${id}/setmain`, {}),
   deletePhoto: (id: string) => request.delete(`/photos/${id}`),
-  follow: (username: string) => request.post(`/profiles/${username}/follow`, {}),
-  unfollow: (username: string) => request.delete(`/profiles/${username}/follow`)
+  follow: (username: string) =>
+    request.post(`/profiles/${username}/follow`, {}),
+  unfollow: (username: string) =>
+    request.delete(`/profiles/${username}/follow`),
+  listFollowings: (username: string, predicate: string) =>
+    request.get(`/profiles/${username}/follow?predicate=${predicate}`)
 };
