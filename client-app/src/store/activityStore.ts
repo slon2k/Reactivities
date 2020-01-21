@@ -12,6 +12,8 @@ import {
   LogLevel
 } from "@microsoft/signalr";
 
+const LIMIT = 2;
+
 export default class ActivityStore {
   rootStore: RootStore;
 
@@ -25,6 +27,14 @@ export default class ActivityStore {
   @observable selectedActivity: IActivity | null = null;
   @observable deleting = new Set<string>();
   @observable.ref hubConnection: HubConnection | null = null;
+  @observable activityCount = 0;
+  @observable page = 0;
+
+  @computed get totalPages() {
+    return Math.ceil(this.activityCount / LIMIT);
+  }
+
+  @action setPage = (page: number) => (this.page = page);
 
   @action createHubConnection = (activityId: string) => {
     this.hubConnection = new HubConnectionBuilder()
@@ -39,7 +49,7 @@ export default class ActivityStore {
       .then(() => console.log(this.hubConnection?.state))
       .then(() => {
         console.log("Attemting to join group");
-        this.hubConnection!.invoke("AddToGroup", activityId)
+        this.hubConnection!.invoke("AddToGroup", activityId);
       })
       .catch(error => console.log("Error establishing connection: ", error));
 
@@ -51,11 +61,12 @@ export default class ActivityStore {
 
     this.hubConnection.on("Send", message => {
       toast.info(message);
-    })
+    });
   };
 
   @action stopHubConnection = () => {
-    this.hubConnection?.invoke("RemoveFromGroup", this.selectedActivity!.id)
+    this.hubConnection
+      ?.invoke("RemoveFromGroup", this.selectedActivity!.id)
       .then(() => {
         this.hubConnection?.stop();
       })
@@ -97,9 +108,10 @@ export default class ActivityStore {
     const user = this.rootStore.userStore.user!;
     this.loading = true;
     try {
-      const response = await api.Activities.list();
+      const activitiesEnvelope = await api.Activities.list(LIMIT, this.page);
+      const { activities, activityCount } = activitiesEnvelope;
       runInAction("loading", () => {
-        response.forEach(item => {
+        activities.forEach(item => {
           item.date = new Date(item.date!);
           item.isGoing = item.attendees.some(a => a.userName === user.userName);
           item.isHost = item.attendees.some(
@@ -107,6 +119,7 @@ export default class ActivityStore {
           );
           this.activityRegistry.set(item.id, item);
         });
+        this.activityCount = activityCount;
         this.loading = false;
       });
     } catch (error) {
