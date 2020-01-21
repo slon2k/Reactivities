@@ -7,6 +7,8 @@ using Persistence;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using System.Linq;
+using System;
+using Application.Interfaces;
 
 namespace Application.Activities
 {
@@ -19,32 +21,55 @@ namespace Application.Activities
         }
         public class Query : IRequest<ActivitiesEnvelope>
         {
-            public Query(int? offset, int? limit)
+            public DateTime? StartDate { get; set; }
+            public bool IsHost { get; set; }
+            public bool IsGoing { get; set; }
+            public int? Offset { get; set; }
+            public int? Limit { get; set; }
+            public Query(int? offset, int? limit, bool isGoing, bool isHost, DateTime? startDate)
             {
+                IsGoing = isGoing;
+                IsHost = isHost;
+                StartDate = startDate ?? DateTime.Now;
                 Offset = offset;
                 Limit = limit;
             }
-
-            public int? Offset { get; set; }
-            public int? Limit { get; set; }
-
         }
 
         public class Handler : IRequestHandler<Query, ActivitiesEnvelope>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, IMapper mapper)
+            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
             {
+                _userAccessor = userAccessor;
                 _mapper = mapper;
                 _context = context;
             }
 
             public async Task<ActivitiesEnvelope> Handle(Query request, CancellationToken cancellationToken)
             {
-                var queryable = _context.Activities.AsQueryable();
-                
+                var queryable = _context.Activities
+                    .Where(x => x.Date >= request.StartDate)
+                    .OrderBy(x => x.Date)
+                    .AsQueryable();
+
+                if (request.IsGoing && !request.IsHost)
+                {
+                    queryable = queryable
+                        .Where(x => x.UserActivities
+                            .Any(a => a.AppUser.UserName == _userAccessor.GetCurrentUserName()));
+                }
+
+                if (request.IsHost && !request.IsGoing)
+                {
+                    queryable = queryable
+                        .Where(x => x.UserActivities
+                            .Any(a => a.AppUser.UserName == _userAccessor.GetCurrentUserName() && a.IsHost));
+                }
+
                 var activities = await queryable
                     .Skip(request.Offset ?? 0)
                     .Take(request.Limit ?? 3)
