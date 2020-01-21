@@ -5,6 +5,7 @@ import { StoreContext } from "../../store";
 import { observer } from "mobx-react-lite";
 import Loading from "../loading/Loading";
 import InfiniteScroll from "react-infinite-scroller";
+import ActivityFilters from "../activity-filters/ActivityFilters";
 
 const ActivityDashboard: React.FC = () => {
   const Store = useContext(StoreContext);
@@ -44,7 +45,7 @@ const ActivityDashboard: React.FC = () => {
         </InfiniteScroll>
       </Grid.Column>
       <Grid.Column width={6}>
-        <h3>Filters</h3>
+        <ActivityFilters />
       </Grid.Column>      
       <Grid.Column width={10}>
         <Loader active={loadingNext}/>
