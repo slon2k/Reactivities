@@ -14,6 +14,7 @@ import NotFound from "../../pages/NotFound";
 import { ToastContainer } from "react-toastify";
 import ModalContainer from "../modals/ModalContainer";
 import ProfilePage from "../../pages/ProfilePage";
+import PrivateRoute from "../private-route/PrivateRoute";
 
 const App = () => {
   const Store = useContext(StoreContext);
@@ -45,11 +46,11 @@ const App = () => {
               <NavBar />
               <Container style={{ paddingTop: "7em" }}>
                 <Switch>
-                  <Route exact path="/activities" component={ActivitiesPage} />
-                  <Route path="/activities/:id" component={DetailsPage} />
-                  <Route path="/create" component={CreatePage} />
-                  <Route path="/edit/:id" component={EditPage} />
-                  <Route path="/profile/:username" component={ProfilePage} />
+                  <PrivateRoute exact path="/activities" component={ActivitiesPage} />
+                  <PrivateRoute path="/activities/:id" component={DetailsPage} />
+                  <PrivateRoute path="/create" component={CreatePage} />
+                  <PrivateRoute path="/edit/:id" component={EditPage} />
+                  <PrivateRoute path="/profile/:username" component={ProfilePage} />
                   <Route component={NotFound} />
                 </Switch>
               </Container>
