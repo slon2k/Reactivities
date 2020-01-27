@@ -5,6 +5,7 @@ import { api } from "../services";
 import { toast } from "react-toastify";
 import { IPhoto } from "../models/photo";
 import { IUpdateProfileForm } from "../models/updateProfileForm";
+import { IUserActivity } from "../models/user-activity";
 
 export default class ProfileStore {
   rootStore: RootStore;
@@ -35,6 +36,8 @@ export default class ProfileStore {
   @observable loadingFollowings: boolean = false;
   @observable followings: IProfile[] = [];
   @observable activeTab: number = 0;
+  @observable userActivities: IUserActivity[] = [];
+  @observable loadingActivities: boolean = false;
 
   @computed get isCurrentUser() {
     if (this.rootStore.userStore.user && this.profile) {
@@ -61,6 +64,25 @@ export default class ProfileStore {
       console.log(error);
     }
   };
+
+  @action loadUserActivities = async (username: string, predicate?: string) => {
+    this.loadingActivities = true;
+    try {
+      const activities = await api.Profile.listActivities(username, predicate!);
+      runInAction(() => {
+        this.userActivities = activities;
+        this.loadingActivities = false;
+      })
+      
+    } catch (error) {
+      console.log(error);
+      toast.error("Problem downloading activities");
+      runInAction(() => {
+        this.loadingActivities = true;
+      });      
+    }
+
+  }
 
   @action uploadPhoto = async (file: Blob) => {
     this.uploadingPhoto = true;
